@@ -1,6 +1,6 @@
 //home page
 const index = (req, res) => {
-  res.send("Home page");
+  res.render("user/pages/index");
 };
 
 //export controllers

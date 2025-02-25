@@ -1,11 +1,13 @@
 import express from "express";
 
 //import controllers
-import userController from "../controllers/userController.js";
+import authController from "../controllers/user/authController.js";
+import productController from "../controllers/user/productController.js";
 
 const userRouter = express.Router();
 
-userRouter.get("/", userController.index);
+userRouter.get("/", authController.index);
+userRouter.get("/mattress", productController.mattress);
 
 //exporting user route
 export default userRouter;

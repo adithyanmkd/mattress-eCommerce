@@ -1,0 +1,17 @@
+<h3 class="text-lg font-semibold"><%- name %></h3>
+
+<!-- Rating -->
+<div class="flex items-center text-yellow-500 text-sm">
+  ⭐⭐⭐⭐☆ <span class="text-gray-500 ml-1"><%- rating %></span>
+</div>
+
+<p class="text-gray-600 text-sm mt-1"><%- description %></p>
+
+<!-- Price -->
+<div class="mt-2 flex items-center space-x-2">
+  <span class="text-xl font-bold"><%- salePrice %></span>
+  <span class="text-gray-400 line-through text-lg"><%= mrp %></span>
+</div>
+
+<!-- Savings -->
+<p class="text-green-600 font-medium text-sm">save <%- discount %></p>

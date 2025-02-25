@@ -29,7 +29,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //router
 app.use("/", userRouter);
-// app.use("/admin", adminRouter)
 
 //start the server
 const PORT = process.env.PORT || 3000;

@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/style/output.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <link rel="stylesheet" href="/style/output.css" />
-</head>
-
-<body>
-  <%- include('../user/partials/organisms/navbar') %>
-  <%- body %>
-  <%- include('../user/partials/organisms/footer') %>
-</body>
-
+  <body>
+    <%- include('../user/partials/organisms/Navbar') %>
+    <main><%- body %></main>
+    <%- include('../user/partials/organisms/Footer') %>
+  </body>
 </html>

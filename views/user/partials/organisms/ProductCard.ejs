@@ -1,0 +1,14 @@
+<% products.forEach((product) => { %>
+<div class="max-w-xs bg-white rounded-2xl shadow-md overflow-hidden border p-4">
+  <div class="relative">
+    <!-- Product Image & Wishlist Button -->
+    <%- include("../atoms/CardImage.ejs", {path: product.images.cardImage.path}) %>
+    <%- include("../atoms/WishlistBtn.ejs") %>
+  </div>
+
+  <!-- Product Details -->
+  <div class="mt-4">
+    <%- include("../molecules/CardTextBlock.ejs", { ...product }) %>
+  </div>
+</div>
+<% }) %>

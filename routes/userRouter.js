@@ -1,13 +1,21 @@
-import express from "express";
+import express from 'express'
 
 //import controllers
-import authController from "../controllers/user/authController.js";
-import productController from "../controllers/user/productController.js";
+import authController from '../controllers/user/authController.js'
+import productController from '../controllers/user/productController.js'
 
-const userRouter = express.Router();
+//import middlewares
+import navLinks from '../middlewares/user/navlinks.js'
 
-userRouter.get("/", authController.index);
-userRouter.get("/mattress", productController.mattress);
+//user router created
+const userRouter = express.Router()
+
+//middlwares
+userRouter.use(navLinks)
+
+userRouter.get('/', authController.index)
+userRouter.get('/mattress', productController.mattress)
+userRouter.get('/pillows', productController.pillows)
 
 //exporting user route
-export default userRouter;
+export default userRouter

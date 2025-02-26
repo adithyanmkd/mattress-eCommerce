@@ -3,7 +3,8 @@ const products = [
     name: 'Hybrid Mattress',
     images: {
       cardImage: {
-        path: 'images/user/images/mattress/card-img-1.svg',
+        path: 'images/products/card-images/card-img-1.svg',
+        alt: 'hybrid mattress',
       },
     },
     rating: 1432,
@@ -16,7 +17,64 @@ const products = [
     name: 'Hybrid Mattress',
     images: {
       cardImage: {
-        path: 'images/user/images/mattress/card-img-2.svg',
+        path: 'images/products/card-images/card-img-2.svg',
+        alt: 'orginal mattress',
+      },
+    },
+    rating: 1432,
+    description: 'Firmness that adapts automatically. New Launch.',
+    mrp: '₹10,832',
+    salePrice: '₹6,499',
+    discount: '₹4,333',
+  },
+  {
+    name: 'Hybrid Mattress',
+    images: {
+      cardImage: {
+        path: 'images/products/card-images/card-img-2.svg',
+        alt: 'orginal mattress',
+      },
+    },
+    rating: 1432,
+    description: 'Firmness that adapts automatically. New Launch.',
+    mrp: '₹10,832',
+    salePrice: '₹6,499',
+    discount: '₹4,333',
+  },
+  {
+    name: 'Hybrid Mattress',
+    images: {
+      cardImage: {
+        path: 'images/products/card-images/card-img-2.svg',
+        alt: 'orginal mattress',
+      },
+    },
+    rating: 1432,
+    description: 'Firmness that adapts automatically. New Launch.',
+    mrp: '₹10,832',
+    salePrice: '₹6,499',
+    discount: '₹4,333',
+  },
+  {
+    name: 'Hybrid Mattress',
+    images: {
+      cardImage: {
+        path: 'images/products/card-images/card-img-2.svg',
+        alt: 'orginal mattress',
+      },
+    },
+    rating: 1432,
+    description: 'Firmness that adapts automatically. New Launch.',
+    mrp: '₹10,832',
+    salePrice: '₹6,499',
+    discount: '₹4,333',
+  },
+  {
+    name: 'Hybrid Mattress',
+    images: {
+      cardImage: {
+        path: 'images/products/card-images/card-img-2.svg',
+        alt: 'orginal mattress',
       },
     },
     rating: 1432,

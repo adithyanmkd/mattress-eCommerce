@@ -1,0 +1,265 @@
+<div class="flex h-screen w-screen bg-[#FFF7F1]">
+  <!-- left section sidebar started -->
+  <div class="h-full w-[20%] flex-col bg-[#FC9B4E] pt-6">
+    <div class="justify-items-center space-y-4 pb-6">
+      <img src="/images/icons/logo.svg" alt="logo" />
+      <p class="font-semibold text-white">Admin Dashboard</p>
+    </div>
+    <div class="h-px bg-[#EDEDED]"></div>
+    <!-- menu items started -->
+    <ul class="justify-items-center space-y-4 pt-10">
+      <li>
+        <a
+          href=""
+          class="flex w-[192px] transform space-x-4 rounded-[4px] py-2.5 pl-4 transition-all hover:bg-[#DF6830]"
+        >
+          <img src="/images/icons/home.svg" alt="home icon" />
+          <p class="font-medium text-white">Dashboard</p>
+        </a>
+      </li>
+      <li>
+        <a
+          href=""
+          class="flex w-[192px] transform space-x-4 rounded-[4px] py-2.5 pl-4 transition-all hover:bg-[#DF6830]"
+        >
+          <img src="/images/icons/users.svg" alt="home icon" />
+          <p class="font-medium text-white">Users</p>
+        </a>
+      </li>
+    </ul>
+    <!-- menu items ended -->
+  </div>
+  <!-- left section sidebar ended -->
+  <!-- right section started -->
+  <div class="w-[80%]">
+    <div class="flex h-32 items-center justify-between bg-white px-12">
+      <button
+        class="cursor-pointer rounded-[8px] bg-[#DF6830] px-5 py-2.5 text-white hover:bg-[#ff783a]"
+        type="submit"
+        id="add-user-btn"
+      >
+        Add user
+      </button>
+      <a href="/admin/logout" class="flex">
+        <img
+          class="pr-3"
+          src="/images/icons/exit_icon.svg"
+          alt="exit icon"
+        />Log out</a
+      >
+    </div>
+    <!-- listing all users started -->
+    <div class="mt-10 px-12">
+      <div class="rounded-2xl bg-white pt-10">
+        <div class="flex justify-between px-4 pb-8">
+          <h2 class="text-[22px] font-semibold">All Users</h2>
+          <div class="flex gap-4">
+            <div class="flex h-[40px] gap-4 rounded-[8px] bg-[#F9FBFF] px-4">
+              <img
+                class="w-[24px]"
+                src="/images/icons/search.svg"
+                alt="search icon"
+              />
+              <form action="/admin/search" method="post">
+                <input
+                  class="h-full outline-none"
+                  type="search"
+                  name="search"
+                  placeholder="Search"
+                />
+              </form>
+            </div>
+            <!-- <input
+              class="cursor-pointer rounded-[8px] bg-blue-800 px-4 py-2 text-white"
+              type="submit"
+              value="Search"
+            /> -->
+          </div>
+        </div>
+        <!-- table started -->
+        <div class="relative overflow-x-auto">
+          <table class="w-full text-left text-sm text-gray-900">
+            <thead class="bg-gray-100 text-xs text-gray-500 uppercase">
+              <tr>
+                <th scope="col" class="px-6 py-3">Users Name</th>
+                <th scope="col" class="px-6 py-3">Email</th>
+                <th scope="col" class="px-6 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- {{#each users}} -->
+              <tr class="border-b border-gray-400 bg-white">
+                <td class="px-6 py-4 font-medium text-gray-900">
+                  <!-- {{this.username}} -->
+                </td>
+                <!-- <td class="px-6 py-4 text-gray-600">{{this.email}}</td> -->
+                <td class="flex gap-4 px-6 py-4">
+                  {{! edit btn form }}
+                  <form action="/admin/edit-user">
+                    <input
+                      class="hidden"
+                      type="text"
+                      value="{{this._id}}"
+                      name="id"
+                    />
+                    <button
+                      class="flex items-center gap-2 rounded-md border border-blue-600 px-3 py-1 text-blue-600 hover:cursor-pointer hover:bg-blue-100"
+                      type="submit"
+                    >
+                      <img src="/images/icons/edit.svg" alt="edit icon" />
+                      Edit
+                    </button>
+                  </form>
+                  <!-- {{! edit btn form ended }} {{! delete btn form }} -->
+                  <form action="/admin/delete" method="post">
+                    <input
+                      name="email"
+                      class="hidden"
+                      type="text"
+                      value="{{this.email}}"
+                    />
+                    <button
+                      class="flex items-center gap-2 rounded-md border border-red-600 px-3 py-1 text-red-600 hover:cursor-pointer hover:bg-red-100"
+                    >
+                      <img src="/images/icons/trush.svg" alt="trush icon" />
+                      Delete
+                    </button>
+                  </form>
+                  <!-- {{! delete btn form ended }} -->
+                </td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+        <!-- table ended -->
+      </div>
+    </div>
+    <!-- listing all users ended -->
+  </div>
+  <!-- right section ended -->
+  <!-- {{! add user pop up screen started }} -->
+  <div class="absolute hidden" id="pop-up-screen">
+    <div class="h-screen w-screen bg-[#2D1400] opacity-60"></div>
+    <div
+      class="absolute top-[50%] left-[50%] flex w-[600px] translate-x-[-50%] translate-y-[-50%] justify-center rounded-2xl bg-white py-8"
+    >
+      <!-- close btn started -->
+      <button id="closeBtn" class="absolute top-5 right-5 cursor-pointer">
+        <img src="/images/icons/close.svg" alt="close icon" />
+      </button>
+      <!-- close btn closed -->
+      <!-- user add form started -->
+      <form action="/admin/add-user" id="admin-side-user-add" method="post">
+        <ul class="space-y-6">
+          <li class="space-y-2">
+            <label class="block" for="username">Username</label>
+            <input
+              class="h-10 w-[300px] rounded-[10px] border border-[#C4C4C4] pl-3 outline-none placeholder:text-[14px] placeholder:font-light focus:border-black"
+              for="username"
+              name="username"
+              placeholder="Enter user name"
+              type="text"
+            />
+          </li>
+          <li class="space-y-2">
+            <label class="block" for="email">Email</label>
+            <input
+              class="h-10 w-[300px] rounded-[10px] border border-[#C4C4C4] pl-3 outline-none placeholder:text-[14px] placeholder:font-light focus:border-black"
+              for="email"
+              name="email"
+              placeholder="sample@gmail.com"
+              type="email"
+            />
+          </li>
+          <li class="space-y-2">
+            <label class="block" for="password">Password</label>
+            <input
+              class="h-10 w-[300px] rounded-[10px] border border-[#C4C4C4] pl-3 outline-none placeholder:text-[14px] placeholder:font-light focus:border-black"
+              for="password"
+              name="password"
+              placeholder="**********"
+              type="password"
+            />
+          </li>
+          <li class="pt-6">
+            <button
+              class="w-full cursor-pointer rounded-[12px] bg-[#DF6830] py-2.5 font-semibold text-white hover:bg-[#F08451]"
+              type="submit"
+            >
+              Add
+            </button>
+          </li>
+        </ul>
+      </form>
+      <!-- user add form closed -->
+    </div>
+  </div>
+  <!-- {{! add user pop up screen ended }} {{! edit user pop up screen started }}
+  {{#if editUser}} -->
+  <div class="absolute" id="edit-pop-up-screen">
+    <div class="h-screen w-screen bg-[#2D1400] opacity-60"></div>
+    <div
+      class="absolute top-[50%] left-[50%] flex w-[600px] translate-x-[-50%] translate-y-[-50%] justify-center rounded-2xl bg-white py-8"
+    >
+      <!-- close btn started -->
+      <!-- <form action="/admin">
+          <button
+            id="editCloseBtn"
+            class="absolute top-5 right-5 cursor-pointer"
+          ><img src="/images/icons/close.svg" alt="close icon" /></button>
+        </form> -->
+      <a href="/admin" class="absolute top-5 right-5 cursor-pointer"
+        ><img src="/images/icons/close.svg" alt="close icon"
+      /></a>
+      <!-- close btn closed -->
+      <!-- edit add form started -->
+      <form action="/admin/edit-user" id="admin-side-edit-user" method="post">
+        <ul class="space-y-6">
+          <li class="space-y-2">
+            <label class="block" for="username">Username</label>
+            <input
+              class="h-10 w-[300px] rounded-[10px] border border-[#C4C4C4] pl-3 outline-none placeholder:text-[14px] placeholder:font-light focus:border-black"
+              for="username"
+              name="username"
+              placeholder="Enter user name"
+              type="text"
+              value="{{editUser.username}}"
+            />
+          </li>
+          <li class="space-y-2">
+            <label class="block" for="email">Email</label>
+            <input
+              class="h-10 w-[300px] rounded-[10px] border border-[#C4C4C4] pl-3 outline-none placeholder:text-[14px] placeholder:font-light focus:border-black"
+              for="email"
+              name="email"
+              placeholder="sample@gmail.com"
+              type="email"
+              value="{{editUser.email}}"
+            />
+          </li>
+          <li class="space-y-2">
+            <label class="block" for="password">Password</label>
+            <input
+              class="h-10 w-[300px] rounded-[10px] border border-[#C4C4C4] pl-3 outline-none placeholder:text-[14px] placeholder:font-light focus:border-black"
+              for="password"
+              name="password"
+              placeholder="**********"
+              type="password"
+            />
+          </li>
+          <li class="pt-6">
+            <button
+              class="w-full cursor-pointer rounded-[12px] bg-[#DF6830] py-2.5 font-semibold text-white hover:bg-[#F08451]"
+              type="submit"
+            >
+              Edit
+            </button>
+          </li>
+        </ul>
+      </form>
+      <!-- user edit form closed -->
+    </div>
+  </div>
+  <!-- {{/if}} {{! edit user pop up screen }} -->
+</div>

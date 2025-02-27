@@ -14,11 +14,15 @@ const userRouter = express.Router()
 //middlwares
 userRouter.use(navLinks)
 
-userRouter.get('/login', authController.getLogin) //login page
-userRouter.get('/register', authController.getRegister) //register page
+userRouter.get('/login', authController.getLogin) // login page
+userRouter.post('/login', authController.postLogin) // check login credentials
+
+userRouter.get('/register', authController.getRegister) // register page
 userRouter.post('/register', authController.postRegister) // register user
+
 userRouter.get('/', homeController.getIndex) //home page
-userRouter.get('/mattress', productController.mattress) //mattress page
+
+userRouter.get('/mattress', productController.mattress) // mattress page
 userRouter.get('/pillows', productController.pillows) // pillows page
 
 //exporting user route

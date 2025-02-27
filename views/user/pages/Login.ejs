@@ -42,8 +42,8 @@
   <%- include("../partials/atoms/AuthImage.ejs", {...authImage}) %>
 
   <!-- heading block and hero image ended -->
-  <!-- login form started -->
 
+  <!-- login form started -->
   <form
     class="w-96"
     id="user-login-form"
@@ -53,6 +53,15 @@
   >
     <%- include("../partials/molecules/AuthHeading.ejs", {...authHeading}) %>
     <ul class="space-y-6">
+      <% if(typeof success !== "undefined" && success) { %>
+      <li
+        id="success-box"
+        class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50"
+      >
+        <%- success %>
+      </li>
+      <% } %>
+
       <% inputFields.forEach((field) => { %>
       <%- include("../partials/atoms/InputField.ejs", {...field}) %>
       <% }) %>

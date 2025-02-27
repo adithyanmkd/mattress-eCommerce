@@ -1,0 +1,118 @@
+<% 
+  const authHeading = {
+    title: "Join Us Today!", 
+    description: "Create an account and start your journey with us."
+  }
+
+  const authImage = {
+    src: "/images/auth/kid-image.svg",
+    alt: "kid login image" 
+  }
+
+ const inputFields = [
+  {
+    icon: {
+      iconSrc: '/images/icons/user.svg',
+      altText: 'user icon',
+    },
+    id: 'fullname',
+    name: 'fullname',
+    floatName: "Fullname",
+    type: 'text',
+    placeholder: 'Enter your name',
+  },
+  {
+    icon: {
+      iconSrc: '/images/icons/user.svg',
+      altText: 'user icon',
+    },
+    id: 'email',
+    name: 'email',
+    floatName: "Email",
+    type: 'email',
+    placeholder: 'Enter your email',
+  },
+  {
+    icon: {
+      iconSrc: '/images/icons/lock.svg',
+      altText: 'lock icon',
+    },
+    id: 'password',
+    name: 'password',
+    floatName: "Password",
+    type: 'password',
+    placeholder: 'Enter your password',
+  },
+  {
+    icon: {
+      iconSrc: '/images/icons/lock.svg',
+      altText: 'lock icon',
+    },
+    id: 'confirmPassword',
+    name: 'confirmPassword',
+    floatName: "Confirm password",
+    type: 'password',
+    placeholder: 'Enter your password',
+  },
+]
+%>
+
+<div class="h-full items-center justify-evenly md:flex md:flex-row-reverse">
+  <!-- heading block and hero image -->
+
+  <div class="pb-16 md:pb-0">
+    <!-- auth image passing -->
+    <%- include("../partials/atoms/AuthImage.ejs", {...authImage}) %>
+    <!-- auth heading block -->
+    <%- include("../partials/molecules/AuthHeading.ejs", {...authHeading, classname: "md:hidden"}) %>
+  </div>
+
+  <!-- heading block and hero image ended -->
+  <!-- login form started -->
+
+  <form
+    class="w-96"
+    id="user-register-form"
+    action="/register"
+    method="post"
+    enctype="application/x-www-form-urlencoded"
+  >
+    <%- include("../partials/molecules/AuthHeading", {...authHeading}) %>
+    <ul class="space-y-6">
+      <% inputFields.forEach((field) => { %>
+      <%- include("../partials/atoms/InputField", {...field}) %>
+      <% }) %>
+
+      <% if(typeof error !== "undefined" && error) { %>
+      <li
+        id="error-box"
+        class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:text-red-400"
+      >
+        <%- error %>
+      </li>
+      <% } %>
+      <!-- client side error box started -->
+      <li
+        id="client-error-box"
+        class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:text-red-400 hidden"
+      >
+        <p id="client-error-box-p"></p>
+      </li>
+      <!-- client side error box ended -->
+      <li class="pt-4">
+        <button
+          class="w-full rounded-xl bg-[#1A1A1A] py-4 text-white hover:cursor-pointer hover:bg-black"
+          type="submit"
+        >
+          Register
+        </button>
+      </li>
+      <p class="text-center">
+        Have an account?
+        <span><a class="pl-1 text-[#0F3DDE]" href="/login">Sign In</a></span>
+      </p>
+    </ul>
+  </form>
+
+  <!-- login form ended -->
+</div>

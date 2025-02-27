@@ -34,7 +34,7 @@
 
   <div class="pb-16 md:pb-0">
     <!-- auth image passing -->
-    <%- include("../partials/atom/AuthImage.ejs", {...authImage}) %>
+    <%- include("../partials/atoms/AuthImage.ejs", {...authImage}) %>
     <!-- auth heading block -->
     <%- include("../partials/molecules/AuthHeading.ejs", {...authHeading, classname: "md:hidden"}) %>
   </div>
@@ -52,7 +52,7 @@
     <%- include("../partials/molecules/AuthHeading", {...authHeading}) %>
     <ul class="space-y-6">
       <% inputFields.forEach((field) => { %>
-      <%- include("../partials/atom/InputField", {...field}) %>
+      <%- include("../partials/atoms/InputField", {...field}) %>
       <% }) %>
 
       <% if(typeof error !== "undefined" && error) { %>

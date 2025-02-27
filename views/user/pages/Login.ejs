@@ -1,0 +1,92 @@
+<% 
+  const authHeading = {
+    title: "Welcome User", 
+    description: "We are glad to see you back with us"
+  }
+
+  const authImage = {
+    src: "/images/auth/kid-image.svg",
+    alt: "kid login image" 
+  }
+
+  const inputFields = [
+  {
+    icon: {
+      iconSrc: '/images/icons/user.svg',
+      altText: 'user icon',
+    },
+    id: 'email',
+    name: 'email',
+    floatName: "Email",
+    type: 'email',
+    placeholder: 'Enter your name',
+  },
+  {
+    icon: {
+      iconSrc: '/images/icons/lock.svg',
+      altText: 'lock icon',
+    },
+    id: 'password',
+    name: 'password',
+    floatName: "Password",
+    type: 'password',
+    placeholder: 'Enter your password',
+  },
+]
+%>
+
+<div class="h-full items-center justify-evenly md:flex md:flex-row-reverse">
+  <!-- heading block and hero image -->
+
+  <!-- auth image passing -->
+  <%- include("../partials/atoms/AuthImage.ejs", {...authImage}) %>
+
+  <!-- heading block and hero image ended -->
+  <!-- login form started -->
+
+  <form
+    class="w-96"
+    id="user-login-form"
+    action="/login"
+    method="post"
+    enctype="application/x-www-form-urlencoded"
+  >
+    <%- include("../partials/molecules/AuthHeading.ejs", {...authHeading}) %>
+    <ul class="space-y-6">
+      <% inputFields.forEach((field) => { %>
+      <%- include("../partials/atoms/InputField.ejs", {...field}) %>
+      <% }) %>
+
+      <% if(typeof error !== "undefined" && error) { %>
+      <li
+        id="error-box"
+        class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:text-red-400"
+      >
+        <%- error %>
+      </li>
+      <% } %>
+      <!-- client side error box started -->
+      <li
+        id="client-error-box"
+        class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:text-red-400 hidden"
+      >
+        <p id="client-error-box-p"></p>
+      </li>
+      <!-- client side error box ended -->
+      <li class="pt-4">
+        <button
+          class="w-full rounded-xl bg-[#1A1A1A] py-4 text-white hover:cursor-pointer hover:bg-black"
+          type="submit"
+        >
+          Login
+        </button>
+      </li>
+    </ul>
+    <p class="pt-6 text-center">
+      Don't have an account?
+      <span><a class="pl-1 text-[#0F3DDE]" href="/register">Sign Up</a></span>
+    </p>
+  </form>
+
+  <!-- login form ended -->
+</div>

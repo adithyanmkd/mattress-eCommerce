@@ -1,5 +1,5 @@
 {
-  "plugins": ["prettier-plugin-ejs"],
+  "plugins": ["prettier-plugin-ejs", "prettier-plugin-tailwindcss"],
   "tabWidth": 2,
   "semi": false,
   "singleQuote": true,

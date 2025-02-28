@@ -22,6 +22,7 @@ userRouter.post('/register', authController.postRegister) // register user
 
 userRouter.get('/otp-verify', authController.getOtpVerify) // otp verify page
 userRouter.post('/otp-verify', authController.postOtpVerify) // otp validation
+userRouter.get('/resend-otp', authController.getResendOtp) // get resend otp
 
 userRouter.get('/', homeController.getIndex) //home page
 

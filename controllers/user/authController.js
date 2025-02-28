@@ -54,6 +54,7 @@ const getRegister = (req, res) => {
     layout: 'layouts/auth-layout.ejs',
     title: 'register',
     error: req.flash('error')[0],
+    success: req.flash('success')[0],
   })
 }
 
@@ -101,6 +102,7 @@ const getOtpVerify = (req, res) => {
     title: 'verify otp',
     email: req.session.tempEmail,
     error: req.flash('error')[0],
+    success: req.flash('success')[0],
   })
 }
 
@@ -130,6 +132,32 @@ const postOtpVerify = async (req, res) => {
   }
 }
 
+//resend otp
+const getResendOtp = async (req, res) => {
+  // generate OTP
+  const otp = generateOTP()
+  const otpExpiry = Date.now() + 10 * 60 * 100 // OTP expires in 10 minutes
+
+  try {
+    const user = await User.findOneAndUpdate(
+      { email: req.session.tempEmail }, // Find user by email
+      { otp, otpExpires: otpExpiry }, // Update fields
+      { new: true }, // Return updated document
+    )
+
+    if (!user) {
+      req.flash('error', 'User not exist')
+      return res.redirect('/otp-verify')
+    }
+
+    await sendOTP(user.email, otp) // resending OTP to mail
+    req.flash('success', 'OTP has been sent successfully!')
+    res.redirect('/otp-verify')
+  } catch (error) {
+    res.json({ Error: error })
+  }
+}
+
 // controllers object
 const authController = {
   getLogin,
@@ -138,6 +166,7 @@ const authController = {
   postRegister,
   getOtpVerify,
   postOtpVerify,
+  getResendOtp,
 }
 
 //export controllers

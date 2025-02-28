@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 import expressLayouts from 'express-ejs-layouts'
 import session from 'express-session'
 import flash from 'connect-flash'
+import MongoStore from 'connect-mongo'
 
 import connectDB from './config/database.js' //imported db
 
@@ -20,11 +21,22 @@ const __dirname = path.dirname(__filename)
 //connet DB
 connectDB()
 
+// Session Middleware
 app.use(
   session({
     secret: process.env.SESSION_SECRET_KEY,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      collectionName: 'sessions', // Collection name in MongoDB
+      ttl: 24 * 60 * 60, // Session expires in 24 hours
+    }),
+    cookie: {
+      secure: false, // Set to true in production with HTTPS
+      httpOnly: true, // Prevents client-side JavaScript from accessing the session cookie
+      maxAge: 24 * 60 * 60 * 1000, // Cookie expiry in 24 hours
+    },
   }),
 )
 

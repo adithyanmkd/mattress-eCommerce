@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
     enum: ['customer', 'admin'], // Allowed roles
     default: 'customer', // Default role for new customer
   },
+  isBlocked: { type: Boolean, default: false },
   isVerified: { type: Boolean, default: false }, // Account verification status
   otp: { type: String }, // OTP for email validation
   otpExpires: { type: Date }, // Expiration time for OTP

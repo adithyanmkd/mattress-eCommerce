@@ -1,23 +1,24 @@
 import mongoose, { mongo } from 'mongoose'
 
 const userSchema = new mongoose.Schema({
-  name: String,
+  googleId: { type: String }, // store google user ID
+  name: { type: String },
   email: {
     type: String,
     required: true,
     urique: true,
   },
   password: {
-    type: String,
-    required: true,
+    type: String, // optional for google user
   },
   role: {
     type: String,
-    enum: ['customer', 'admin'], // Allowed roles
-    default: 'customer', // Default role for new customer
+    enum: ['customer', 'admin'], // allowed roles
+    default: 'customer', // default role for new customer
   },
   isBlocked: { type: Boolean, default: false },
-  isVerified: { type: Boolean, default: false }, // Account verification status
+  isGoogleUser: { type: Boolean, default: false },
+  profilePic: String, // google profile pic
   otp: { type: String }, // OTP for email validation
   otpExpires: { type: Date }, // Expiration time for OTP
 })

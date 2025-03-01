@@ -6,6 +6,9 @@ import session from 'express-session'
 import flash from 'connect-flash'
 import MongoStore from 'connect-mongo'
 
+// import configs
+import passport from './config/passport.js'
+
 import connectDB from './config/database.js' //imported db
 
 //importing routes
@@ -40,7 +43,11 @@ app.use(
   }),
 )
 
-app.use(flash())
+// Initialize Passport
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.use(flash()) // flash message i used to succes, and error message showing
 
 app.use(express.urlencoded({ extended: true })) // Enables parsing of form data
 app.use(express.json()) // Enables JSON parsing (for APIs)

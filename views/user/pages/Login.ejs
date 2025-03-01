@@ -1,3 +1,4 @@
+
 <% 
   const authHeading = {
     title: "Welcome User", 
@@ -34,6 +35,8 @@
   },
 ]
 %>
+
+
 
 <div class="h-full items-center justify-evenly md:flex md:flex-row-reverse">
   <!-- heading block and hero image -->
@@ -91,6 +94,14 @@
         </button>
       </li>
     </ul>
+
+    <a
+  href="/auth/google"
+  class="flex space-x-4 border hover:bg-gray-100  border-gray-400 rounded-[4px] items-center justify-center py-2 mt-4"
+>
+  <img src="/images/icons/google-icon.svg" alt="Google Icon" class="h-5 w-5" />
+  <span class="font-medium">Sign in with Google</span>
+</a>
     <p class="pt-6 text-center">
       Don't have an account?
       <span><a class="pl-1 text-[#0F3DDE]" href="/register">Sign Up</a></span>

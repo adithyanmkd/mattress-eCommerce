@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/style/output.css">
+  </head>
+  <body class="flex h-screen bg-gray-50">
+    <!-- Sidebar started -->
+    <%- include("../admin/partials/organisms/Sidebar.ejs", { adminSidebar }) %>
+    <!-- sidebar ended -->
+
+    <!-- Main Content -->
+    <div class="flex flex-1 flex-col">
+      <!-- Navbar -->
+      <header
+        class="flex items-center justify-between bg-white px-6 py-4 shadow"
+      >
+        <h1 class="text-xl font-semibold">Admin Dashboard</h1>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-700">Welcome, Admin</span>
+          <button class="rounded-lg bg-red-500 px-4 py-2 text-white">
+            Logout
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <%- body %>
+    </div>
+
+    <script src="/javascript/adminLayout.js"></script>
+  </body>
+</html>

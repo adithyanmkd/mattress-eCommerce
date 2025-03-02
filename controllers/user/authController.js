@@ -31,6 +31,15 @@ const postLogin = async (req, res) => {
       })
     }
 
+    // if user is a google user
+    if (user.isGoogleUser) {
+      return res.render('user/pages/Login', {
+        layout: 'layouts/auth-layout',
+        title: 'login',
+        error: 'You signed up with Google. Please log in using Google Sign-In.',
+      })
+    }
+
     //compare form password and database password
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
@@ -44,7 +53,7 @@ const postLogin = async (req, res) => {
 
     res.redirect('/')
   } catch (error) {
-    res.json({ Error: error })
+    res.json({ Error: error, DeveloperError: 'post login error' })
   }
 }
 

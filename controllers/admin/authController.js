@@ -14,10 +14,7 @@ const authenticateAdmin = (req, res) => {
     username == process.env.ADMIN_NAME &&
     password == process.env.ADMIN_PASS
   ) {
-    res.render('admin/pages/Dashboard', {
-      layout: 'layouts/auth-layout',
-      title: 'post login',
-    })
+    res.redirect('/admin')
   } else {
     res.render('admin/pages/Login', {
       layout: 'layouts/auth-layout',

@@ -9,7 +9,7 @@ import homeController from '../controllers/user/homeController.js'
 import productController from '../controllers/user/productController.js'
 
 //import middlewares
-import navLinks from '../middlewares/user/navlinks.js'
+import navLinks from '../middlewares/user/userNavLinks.js'
 
 //user router created
 const userRouter = express.Router()
@@ -27,7 +27,7 @@ userRouter.get('/otp-verify', authController.getOtpVerify) // otp verify page
 userRouter.post('/otp-verify', authController.postOtpVerify) // otp validation
 userRouter.get('/resend-otp', authController.getResendOtp) // get resend otp
 
-userRouter.get('/', homeController.getIndex) //home page
+userRouter.get('/', homeController.getIndex) // get home page
 
 userRouter.get('/mattress', productController.mattress) // mattress page
 userRouter.get('/pillows', productController.pillows) // pillows page

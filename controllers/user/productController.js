@@ -1,5 +1,5 @@
 //importing sample dataset
-import products from '../../sampleDatasets/productData.js'
+import products from '../../datasets/productData.js'
 
 const mattress = (req, res) => {
   res.render('user/pages/Mattress', { products })

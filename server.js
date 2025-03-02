@@ -52,8 +52,7 @@ app.use(flash()) // flash message i used to succes, and error message showing
 app.use(express.urlencoded({ extended: true })) // Enables parsing of form data
 app.use(express.json()) // Enables JSON parsing (for APIs)
 
-// Use express-ejs-layouts
-app.use(expressLayouts)
+app.use(expressLayouts) // Use express-ejs-layouts
 
 //set view engine
 app.set('view engine', 'ejs')

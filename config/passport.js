@@ -2,6 +2,9 @@ import passport from 'passport'
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import User from '../models/userModel.js'
 
+// import util functions
+import { saveProfileImage } from '../utils/saveProfileImage.js'
+
 passport.use(
   new GoogleStrategy(
     {
@@ -14,13 +17,19 @@ passport.use(
         // Check if user already exists
         let user = await User.findOne({ googleId: profile.id })
 
+        // Save profile picture locally
+        const savedImagePath = await saveProfileImage(
+          profile.photos[0].value,
+          profile.id,
+        )
+
         if (!user) {
           // Create new user
           user = new User({
             googleId: profile.id,
             name: profile.displayName,
             email: profile.emails[0].value,
-            profilePic: profile.photos[0].value,
+            profilePic: savedImagePath, // Use locally saved image
             isGoogleUser: true,
           })
 

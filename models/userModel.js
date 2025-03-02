@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
   },
   isBlocked: { type: Boolean, default: false },
   isGoogleUser: { type: Boolean, default: false },
-  profilePic: String, // google profile pic
+  profilePic: { type: String, default: '/images/icons/avatar.svg' }, // google profile pic
   otp: { type: String }, // OTP for email validation
   otpExpires: { type: Date }, // Expiration time for OTP
 })

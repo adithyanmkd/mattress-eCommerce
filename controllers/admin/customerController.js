@@ -1,7 +1,7 @@
 import User from '../../models/userModel.js' // user model imported
 
 // get all customer
-const getAllUser = async (req, res) => {
+const getCustomers = async (req, res) => {
   try {
     let users
     let searchValue = req.query.search || ''
@@ -18,7 +18,7 @@ const getAllUser = async (req, res) => {
       users = await User.find() // get all users
     }
 
-    res.render('admin/pages/AllUsers', {
+    res.render('admin/pages/Customers', {
       users,
       layout: 'layouts/admin-layout.ejs',
     })
@@ -26,12 +26,6 @@ const getAllUser = async (req, res) => {
     console.error('Error fetching users:', error)
     res.json({ Error: error, DeveloperNote: 'get all users route' })
   }
-}
-
-// get search based customer
-const searchCustomer = async (req, res) => {
-  const searchValue = req.query.search
-  console.log(searchValue)
 }
 
 // block user
@@ -50,8 +44,7 @@ const toggleBlock = async (req, res) => {
 
 // export all controller
 const customerController = {
-  getAllUser,
+  getCustomers,
   toggleBlock,
-  searchCustomer,
 }
 export default customerController

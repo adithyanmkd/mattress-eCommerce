@@ -1,0 +1,131 @@
+<div class="mx-auto mt-20 max-w-6xl rounded-lg bg-white p-6 shadow-md">
+  <h2 class="mb-4 text-2xl font-semibold">Add a New Product</h2>
+
+  <form action="/admin/product/add" method="POST" enctype="multipart/form-data">
+    <div class="grid grid-cols-3 gap-6">
+      <!-- Left Section (Product Info & Image) -->
+      <div class="col-span-2 space-y-6">
+        <!-- Product Information -->
+        <div class="rounded-lg bg-gray-50 p-4 shadow">
+          <h3 class="mb-3 text-lg font-medium">Product Information</h3>
+
+          <label class="mb-1 block font-medium text-gray-700"
+            >Product Name</label
+          >
+          <input
+            type="text"
+            name="productName"
+            class="w-full rounded border p-2"
+            required
+          />
+
+          <label class="mt-3 mb-1 block font-medium text-gray-700"
+            >Description</label
+          >
+          <textarea
+            name="description"
+            class="w-full rounded border p-2"
+          ></textarea>
+        </div>
+
+        <!-- Card Image Upload -->
+        <div class="rounded-lg bg-gray-50 p-4 shadow">
+          <h3 class="mb-3 text-lg font-medium">Card Image</h3>
+          <div class="border-2 border-dashed p-6 text-center">
+            <input
+              type="file"
+              name="cardImage"
+              class="hidden"
+              id="cardImageUpload"
+            />
+            <label for="cardImageUpload" class="cursor-pointer text-blue-600">
+              Drag and drop or browse image
+            </label>
+          </div>
+        </div>
+
+        <!-- Product Images Upload -->
+        <div class="rounded-lg bg-gray-50 p-4 shadow">
+          <h3 class="mb-3 text-lg font-medium">
+            Product Images (Upload 4 images)
+          </h3>
+          <div class="border-2 border-dashed p-6 text-center">
+            <input
+              type="file"
+              name="productImages"
+              multiple
+              class="hidden"
+              id="productImagesUpload"
+            />
+            <label
+              for="productImagesUpload"
+              class="cursor-pointer text-blue-600"
+            >
+              Drag and drop or browse images
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Section (Pricing, Category, Wishlist) -->
+      <div class="space-y-6">
+        <!-- Pricing -->
+        <div class="rounded-lg bg-gray-50 p-4 shadow">
+          <h3 class="mb-3 text-lg font-medium">Pricing</h3>
+
+          <label class="mb-1 block font-medium text-gray-700"
+            >Selling Price</label
+          >
+          <input
+            type="number"
+            name="price[sellingPrice]"
+            class="w-full rounded border p-2"
+            required
+          />
+
+          <label class="mt-3 mb-1 block font-medium text-gray-700"
+            >Original Price</label
+          >
+          <input
+            type="number"
+            name="price[originalPrice]"
+            class="w-full rounded border p-2"
+            required
+          />
+
+          <label class="mt-3 mb-1 block font-medium text-gray-700"
+            >Discount (%)</label
+          >
+          <input
+            type="number"
+            name="price[discount]"
+            class="w-full rounded border p-2"
+          />
+        </div>
+
+        <!-- Category Selection -->
+        <div class="rounded-lg bg-gray-50 p-4 shadow">
+          <h3 class="mb-3 text-lg font-medium">Category</h3>
+          <select name="category" class="w-full rounded border p-2">
+            <option>Mattress</option>
+            <option>Pillow</option>
+            <option>Beds</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="mt-6 flex justify-end space-x-4">
+      <button type="button" class="rounded border px-4 py-2 hover:bg-gray-100">
+        Discard
+      </button>
+      <button
+        type="submit"
+        class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+      >
+        Publish Product
+      </button>
+    </div>
+  </form>
+</div>

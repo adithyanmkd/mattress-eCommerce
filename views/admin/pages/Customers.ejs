@@ -55,7 +55,7 @@
           </td> -->
           <!-- status column -->
           <td class="p-3">
-            <form id="toggle-form" action="/admin/customer/<%= user._id %>/toggle-block"  method="POST">
+            <form id="toggle-form" action="/admin/customers/<%= user._id %>/toggle-block"  method="POST">
               <button type="submit" class="px-4 py-2 rounded-md text-white font-medium 
                 <%= user.isBlocked ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600' %>">
                 <%= user.isBlocked ? 'Unblock' : 'Block' %>

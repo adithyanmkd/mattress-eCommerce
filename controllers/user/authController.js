@@ -40,6 +40,15 @@ const postLogin = async (req, res) => {
       })
     }
 
+    // if user blocked by admin
+    if (user.isBlocked) {
+      return res.render('user/pages/Login', {
+        layout: 'layouts/auth-layout',
+        title: 'login',
+        error: 'Your account is currently blocked',
+      })
+    }
+
     //compare form password and database password
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {

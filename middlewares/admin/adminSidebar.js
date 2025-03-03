@@ -1,3 +1,5 @@
+let tempPath = ''
+
 const adminSidebar = (req, res, next) => {
   res.locals.adminSidebar = [
     {
@@ -8,12 +10,12 @@ const adminSidebar = (req, res, next) => {
         {
           name: 'All Customers',
           href: '/admin/customers',
-          active: req.path === '/admin/customers',
+          active: req.path === '/customers',
         },
         {
           name: 'Customer Details',
           href: '#',
-          active: req.path === '/admin/customers/details',
+          active: req.path === '/customers/details',
         },
       ],
     },

@@ -19,5 +19,6 @@ adminRouter.get('/login', authController.getLogin) // get login page
 adminRouter.post('/login', authController.authenticateAdmin) // post login page
 
 adminRouter.get('/customers', customerController.getAllUser) // get all users
+adminRouter.post('/customer/:id/toggle-block', customerController.toggleBlock) // block or unblock user
 
 export default adminRouter

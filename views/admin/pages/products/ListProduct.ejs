@@ -1,0 +1,32 @@
+<div class="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <table class="w-full border-collapse">
+            <thead>
+                <tr class="bg-gray-200 text-gray-700">
+                    <th class="p-4 text-left">PRODUCT</th>
+                    <th class="p-4 text-left">CATEGORY</th>
+                    <th class="p-4 text-left">PRICE</th>
+                    <th class="p-4 text-left">QTY</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% products.forEach(product => { %>
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-4 flex items-center">
+                            <img src="<%= product.images.cardImage.path %>" alt="<%= product.productName %>" class="w-12 h-12 rounded-lg mr-3">
+                            <div>
+                                <p class="font-semibold text-gray-900"><%= product.productName %></p>
+                                <p class="text-gray-500 text-sm"><%= product.description %></p>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <span class="px-3 py-1 text-sm font-semibold rounded-lg bg-gray-100">
+                                <%= product.category %>
+                            </span>
+                        </td>
+                        <td class="p-4 font-semibold text-gray-900">₹<%= product.price.sellingPrice %></td>
+                        <td class="p-4 font-semibold text-gray-900"><%= product.quantity %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>

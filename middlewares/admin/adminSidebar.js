@@ -31,13 +31,13 @@ const adminSidebar = (req, res, next) => {
         },
         {
           name: 'Add Product',
-          href: '/admin/product/add',
-          active: req.path === '/add-product',
+          href: '/admin/products/add',
+          active: req.path === '/products/add',
         },
         {
           name: 'Category List',
-          href: '#',
-          active: req.path === '/category',
+          href: '/admin/categories',
+          active: req.path === '/categories',
         },
       ],
     },

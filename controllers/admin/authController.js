@@ -1,6 +1,6 @@
 //get login
 const getLogin = (req, res) => {
-  res.render('admin/pages/Login', {
+  res.render('admin/pages/auth/Login', {
     layout: 'layouts/auth-layout',
     title: 'admin login',
   })
@@ -16,7 +16,7 @@ const authenticateAdmin = (req, res) => {
   ) {
     res.redirect('/admin')
   } else {
-    res.render('admin/pages/Login', {
+    res.render('admin/pages/auth/Login', {
       layout: 'layouts/auth-layout',
       title: 'login',
       error: 'invalid credentials',

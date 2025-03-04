@@ -18,7 +18,7 @@ const getCustomers = async (req, res) => {
       users = await User.find() // get all users
     }
 
-    res.render('admin/pages/Customers', {
+    res.render('admin/pages/customers/Customers', {
       users,
       layout: 'layouts/admin-layout.ejs',
     })

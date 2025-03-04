@@ -1,6 +1,6 @@
 //get dashboard
 const getDashboard = (req, res) => {
-  res.render('admin/pages/Dashboard', {
+  res.render('admin/pages/dashboard/Dashboard', {
     layout: 'layouts/admin-layout.ejs',
   })
 }

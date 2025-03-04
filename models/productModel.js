@@ -21,6 +21,7 @@ const productSchema = new mongoose.Schema({
     originalPrice: { type: Number, required: true },
     discount: { type: Number, required: true },
   },
+  quantity: { type: Number, required: true },
   wishlistStatus: { type: Boolean, default: false },
   category: {
     // type: mongoose.Schema.Types.ObjectId,

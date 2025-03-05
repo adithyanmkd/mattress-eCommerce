@@ -36,12 +36,35 @@ const postAddCategory = async (req, res) => {
 
 // list all categories
 const getCategoryList = async (req, res) => {
-  const categories = await Category.find({ isDeleted: false })
-  console.log(categories)
+  let searchValue = req.query.search || '' // accessing search value from url
+
+  const page = parseInt(req.query.page) || 1
+  const limit = 1 // Number of products per page
+  const skip = (page - 1) * limit
+
+  // Build the search filter
+  let filter = {}
+  if (searchValue) {
+    filter = {
+      $or: [{ name: { $regex: searchValue, $options: 'i' } }],
+    }
+  }
+
+  const totalCategory = await Category.countDocuments({
+    isDeleted: false,
+  })
+
+  const totalPages = Math.ceil(totalCategory / limit)
+
+  const categories = await Category.find({ ...filter, isDeleted: false })
+    .skip(skip)
+    .limit(limit)
 
   res.render('admin/pages/categories/ListCategory', {
     layout: 'layouts/admin-layout.ejs',
     categories,
+    page,
+    totalPages,
   })
 }
 

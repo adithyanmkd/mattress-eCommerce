@@ -3,23 +3,35 @@ import User from '../../models/userModel.js' // user model imported
 // get all customer
 const getCustomers = async (req, res) => {
   try {
-    let users
     let searchValue = req.query.search || ''
 
+    const page = parseInt(req.query.page) || 1
+    const limit = 1 // Number of users per page
+    const skip = (page - 1) * limit
+
+    // Build the search filter
+    let filter = {}
     if (searchValue) {
-      // get filterd users
-      users = await User.find({
+      filter = {
         $or: [
           { name: { $regex: searchValue, $options: 'i' } },
           { email: { $regex: searchValue, $options: 'i' } },
         ],
-      })
-    } else {
-      users = await User.find() // get all users
+      }
     }
+
+    // Count total matching users
+    const totalCustomers = await User.countDocuments(filter)
+    const totalPages = Math.ceil(totalCustomers / limit)
+
+    // Fetch filtered and paginated customers
+    const users = await User.find(filter).skip(skip).limit(limit)
 
     res.render('admin/pages/customers/Customers', {
       users,
+      page,
+      totalPages,
+      searchValue, // Keep search value in UI
       layout: 'layouts/admin-layout.ejs',
     })
   } catch (error) {

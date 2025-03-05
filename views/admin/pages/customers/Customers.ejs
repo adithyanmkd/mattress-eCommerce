@@ -66,5 +66,24 @@
         <% }) %>
       </tbody>
     </table>
+       <!-- Pagination -->
+  <div class="flex justify-center space-x-2 mt-4">
+    <% if (page > 1) { %>
+        <a href="/admin/customers?page=<%= page - 1 %>" 
+           class="px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Previous</a>
+    <% } %>
+
+    <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="/admin/customers?page=<%= i %>"
+           class="px-3 py-2 rounded-lg <%= page === i ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300' %>">
+           <%= i %>
+        </a>
+    <% } %>
+
+    <% if (page < totalPages) { %>
+        <a href="/admin/customers?page=<%= page + 1 %>" 
+           class="px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Next</a>
+    <% } %>
+  </div>
   </div>
 </div>

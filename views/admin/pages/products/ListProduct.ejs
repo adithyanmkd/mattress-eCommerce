@@ -1,31 +1,44 @@
 <div class="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-lg">
     <!-- Search Bar & Add Product Button -->
-    <div class="flex justify-between items-center mb-4">
-        <div class="flex items-center space-x-2">
-            <!-- Search Bar -->
-            <input 
+    <div class="flex justify-between items-center py-6">
+        <div class="flex items-center">
+            <!-- Search Bar
+            <!-- search field started -->
+            <div class="">
+            <form action="/admin/products" method="GET" class="flex items-center space-x-2">
+                <input 
                 type="text" 
-                id="search" 
-                placeholder="Search products..." 
-                class="px-4 py-2 border rounded-lg w-72 focus:ring focus:ring-gray-300"
-            />
-            
-            <!-- Clear Button -->
-            <button 
-                id="clearSearch" 
-                class="bg-gray-300 px-4 py-2 rounded-lg shadow-md hover:bg-gray-400"
-            >
+                name="search"
+                class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500" 
+                placeholder="Search..."
+                />
+                <button 
+                type="submit" 
+                class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                >
+                Search
+                </button>
+                <a 
+                href="/admin/products" 
+                class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+                >
                 Clear
-            </button>
+                </a>
+            </form>
+            </div>
+            <!-- search field ended -->
+            
         </div>
 
         <!-- Add Product Button -->
-        <a 
-            href="/admin/products/add" 
-            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md"
-        >
-            + Add Product
-        </a>
+         <div>
+             <a 
+             href="/admin/products/add" 
+             class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md"
+             >
+             + Add Product
+            </a>
+        </div>
     </div>
 
     <table class="w-full border-collapse">
@@ -97,6 +110,25 @@
             <% }) %>
         </tbody>
     </table>
+    <!-- Pagination -->
+  <div class="flex justify-center space-x-2 mt-4">
+    <% if (page > 1) { %>
+        <a href="/admin/products?page=<%= page - 1 %>" 
+           class="px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Previous</a>
+    <% } %>
+
+    <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="/admin/products?page=<%= i %>"
+           class="px-3 py-2 rounded-lg <%= page === i ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300' %>">
+           <%= i %>
+        </a>
+    <% } %>
+
+    <% if (page < totalPages) { %>
+        <a href="/admin/products?page=<%= page + 1 %>" 
+           class="px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Next</a>
+    <% } %>
+  </div>
 </div>
 
 <script>

@@ -680,6 +680,9 @@
   .bg-red-100 {
     background-color: var(--color-red-100);
   }
+  .bg-red-200 {
+    background-color: var(--color-red-200);
+  }
   .bg-red-300 {
     background-color: var(--color-red-300);
   }
@@ -751,6 +754,9 @@
   }
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
+  }
+  .py-6 {
+    padding-block: calc(var(--spacing) * 6);
   }
   .py-\[16px\] {
     padding-block: 16px;
@@ -1007,6 +1013,13 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-gray-200);
+      }
+    }
+  }
+  .hover\:bg-gray-300 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-gray-300);
       }
     }
   }

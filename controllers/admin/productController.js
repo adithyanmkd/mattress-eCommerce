@@ -50,9 +50,33 @@ const postProduct = async (req, res) => {
 
 // list all products
 const allProduct = async (req, res) => {
-  const products = await Product.find({ isDeleted: false })
+  let searchValue = req.query.search || '' // accessing search value from url
+
+  const page = parseInt(req.query.page) || 1
+  const limit = 1 // Number of users per page
+  const skip = (page - 1) * limit
+
+  // Build the search filter
+  let filter = {}
+  if (searchValue) {
+    filter = {
+      $or: [{ productName: { $regex: searchValue, $options: 'i' } }],
+    }
+  }
+
+  // Count total matching users
+  const totalProducts = await Product.countDocuments()
+  const totalPages = Math.ceil(totalProducts / limit)
+
+  // Fetch filtered and paginated product
+  const products = await Product.find({ ...filter, isDeleted: false })
+    .skip(skip)
+    .limit(limit)
+
   res.render('admin/pages/products/ListProduct', {
     products,
+    page,
+    totalPages,
     layout: 'layouts/admin-layout',
   })
 }

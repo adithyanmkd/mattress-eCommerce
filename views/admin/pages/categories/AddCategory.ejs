@@ -22,6 +22,7 @@
           placeholder="Enter category name"
           required
         />
+        <p id="categoryNameError" class="mt-1 hidden text-sm text-red-500"></p>
       </div>
 
       <!-- Category Description -->
@@ -33,6 +34,7 @@
           placeholder="Enter category description"
           required
         ></textarea>
+        <p id="descriptionError" class="mt-1 hidden text-sm text-red-500"></p>
       </div>
     </div>
 
@@ -104,12 +106,18 @@
   </div>
 </form>
 
-<!-- JavaScript for Image Validation -->
+<!-- JavaScript for Form Validation -->
 <script>
   const imageInput = document.getElementById("categoryImageInput");
   const imagePreview = document.getElementById("imagePreview");
   const imagePreviewContainer = document.getElementById("imagePreviewContainer");
   const imageError = document.getElementById("imageError");
+
+  const categoryNameInput = document.querySelector('input[name="categoryName"]');
+  const descriptionInput = document.querySelector('textarea[name="description"]');
+
+  const categoryNameError = document.getElementById("categoryNameError");
+  const descriptionError = document.getElementById("descriptionError");
 
   // Show preview of selected image
   imageInput.addEventListener("change", function (event) {
@@ -127,10 +135,36 @@
 
   // Validate form before submission
   function validateForm() {
+    // Trim the input values
+    const categoryName = categoryNameInput.value.trim();
+    const description = descriptionInput.value.trim();
+    let isValid = true;
+
+    // Reset error messages
+    categoryNameError.textContent = "";
+    descriptionError.textContent = "";
+    categoryNameError.classList.add("hidden");
+    descriptionError.classList.add("hidden");
+    imageError.classList.add("hidden");
+
+    // Check if inputs are empty after trimming
+    if (!categoryName) {
+      categoryNameError.textContent = "⚠️ Category Name cannot be empty or spaces only.";
+      categoryNameError.classList.remove("hidden");
+      isValid = false;
+    }
+    if (!description) {
+      descriptionError.textContent = "⚠️ Description cannot be empty or spaces only.";
+      descriptionError.classList.remove("hidden");
+      isValid = false;
+    }
+
+    // Check if an image is uploaded
     if (!imageInput.files.length) {
       imageError.classList.remove("hidden");
-      return false; // Prevent form submission
+      isValid = false;
     }
-    return true; // Allow form submission
+
+    return isValid; // Allow or prevent form submission
   }
 </script>

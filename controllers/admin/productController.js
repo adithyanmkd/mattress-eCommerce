@@ -1,9 +1,13 @@
+// import models
+import Category from '../../models/catagoryModel.js'
 import Product from '../../models/productModel.js'
 
-// get product add page
-const getProduct = (req, res) => {
+// get add product page
+const getProduct = async (req, res) => {
+  const categories = await Category.find()
   res.render('admin/pages/products/AddProduct', {
     layout: 'layouts/admin-layout',
+    categories,
   })
 }
 
@@ -11,6 +15,8 @@ const getProduct = (req, res) => {
 const postProduct = async (req, res) => {
   try {
     const { productName, description, price, category, quantity } = req.body // accessing form values
+    const discount = parseFloat(price.discount)
+    price.discount = isNaN(discount) ? 0 : discount
 
     // create new product
     const newProduct = new Product({
@@ -36,7 +42,7 @@ const postProduct = async (req, res) => {
     })
 
     await newProduct.save() // save new product
-    res.redirect('/admin')
+    res.redirect('/admin/products')
   } catch (error) {
     res.json({ Error: error, DeveloperNote: 'post product controller' })
   }
@@ -44,17 +50,34 @@ const postProduct = async (req, res) => {
 
 // list all products
 const allProduct = async (req, res) => {
-  const products = await Product.find({})
+  const products = await Product.find({ isDeleted: false })
   res.render('admin/pages/products/ListProduct', {
     products,
     layout: 'layouts/admin-layout',
   })
 }
 
+// delete product
+const deleteProduct = async (req, res) => {
+  const id = req.params.id
+  try {
+    const product = await Product.findById(id)
+    product.isDeleted = true
+    await product.save()
+    res.redirect('/admin/products')
+  } catch (error) {
+    res.json({
+      Error: error,
+      DeveloperNote: 'error from delete product controller',
+    })
+  }
+}
+
 const productController = {
   getProduct,
   postProduct,
   allProduct,
+  deleteProduct,
 }
 
 // export product controller

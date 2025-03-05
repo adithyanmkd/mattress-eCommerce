@@ -13,6 +13,7 @@ const categorySchema = mongoose.Schema(
       },
       alt: { type: String, default: 'category image' },
     },
+    isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }, // adds createdAt & updatedAt
 )

@@ -1,36 +1,3 @@
-// // sample categories
-// const categories = [
-//   {
-//     name: 'Travel',
-//     description:
-//       'Choose from a wide range of travel accessories from popular brands',
-//     totalProducts: 4186,
-//     totalEarnings: 7912.99,
-//     image: '/images/travel.png',
-//   },
-//   {
-//     name: 'Smart Phone',
-//     description: 'Choose from a wide range of smartphones from popular brands',
-//     totalProducts: 1947,
-//     totalEarnings: 99129,
-//     image: '/images/smartphone.png',
-//   },
-//   {
-//     name: 'Shoes',
-//     description: 'Explore the latest shoes from top brands',
-//     totalProducts: 4940,
-//     totalEarnings: 3612.98,
-//     image: '/images/shoes.png',
-//   },
-//   {
-//     name: 'Jewellery',
-//     description: 'Choose from a wide range of jewellery from popular brands',
-//     totalProducts: 4186,
-//     totalEarnings: 7912.99,
-//     image: '/images/jewellery.png',
-//   },
-// ]
-
 import Category from '../../models/catagoryModel.js'
 
 // get category add page
@@ -69,7 +36,7 @@ const postAddCategory = async (req, res) => {
 
 // list all categories
 const getCategoryList = async (req, res) => {
-  const categories = await Category.find({})
+  const categories = await Category.find({ isDeleted: false })
   console.log(categories)
 
   res.render('admin/pages/categories/ListCategory', {
@@ -78,10 +45,27 @@ const getCategoryList = async (req, res) => {
   })
 }
 
+// delete category
+const deleteCategory = async (req, res) => {
+  const id = req.params.id
+  try {
+    const category = await Category.findById(id)
+    category.isDeleted = true
+    await category.save()
+    res.redirect('/admin/categories')
+  } catch (error) {
+    res.json({
+      Error: error,
+      DeveloperNote: 'error from delete category controlle',
+    })
+  }
+}
+
 const categoryController = {
   getAddCategory,
   getCategoryList,
   postAddCategory,
+  deleteCategory,
 }
 
 // export controller

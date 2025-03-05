@@ -13,9 +13,7 @@
         <div class="rounded-lg bg-gray-50 p-4 shadow">
           <h3 class="mb-3 text-lg font-medium">Product Information</h3>
 
-          <label class="mb-1 block font-medium text-gray-700"
-            >Product Name</label
-          >
+          <label class="mb-1 block font-medium text-gray-700">Product Name</label>
           <input
             type="text"
             name="productName"
@@ -23,9 +21,7 @@
             required
           />
 
-          <label class="mt-3 mb-1 block font-medium text-gray-700"
-            >Description</label
-          >
+          <label class="mt-3 mb-1 block font-medium text-gray-700">Description</label>
           <textarea
             name="description"
             class="w-full rounded border p-2"
@@ -39,27 +35,37 @@
             <input
               type="file"
               name="cardImage"
-              class="hidden"
               id="cardImageUpload"
+              required
+              onchange="previewImage(event, 'cardThumbnail')"
             />
             <label for="cardImageUpload" class="cursor-pointer text-blue-600">
               Drag and drop or browse image
             </label>
           </div>
+          <div id="cardThumbnailContainer" class="mt-3 hidden">
+            <img id="cardThumbnail" class="w-20 h-20 rounded-lg object-cover" />
+            <button
+              type="button"
+              class="ml-2 text-red-500"
+              onclick="removeImage('cardImageUpload', 'cardThumbnailContainer')"
+            >
+              ✖
+            </button>
+          </div>
         </div>
 
         <!-- Product Images Upload -->
         <div class="rounded-lg bg-gray-50 p-4 shadow">
-          <h3 class="mb-3 text-lg font-medium">
-            Product Images (Upload 4 images)
-          </h3>
+          <h3 class="mb-3 text-lg font-medium">Product Images (Upload 4 images)</h3>
           <div class="border-2 border-dashed p-6 text-center">
             <input
               type="file"
               name="productImages"
               multiple
-              class="hidden"
+              required
               id="productImagesUpload"
+              onchange="previewMultipleImages(event, 'productThumbnails')"
             />
             <label
               for="productImagesUpload"
@@ -68,6 +74,7 @@
               Drag and drop or browse images
             </label>
           </div>
+          <div id="productThumbnails" class="mt-3 flex gap-2 flex-wrap"></div>
         </div>
       </div>
 
@@ -77,9 +84,7 @@
         <div class="rounded-lg bg-gray-50 p-4 shadow">
           <h3 class="mb-3 text-lg font-medium">Pricing</h3>
 
-          <label class="mb-1 block font-medium text-gray-700"
-            >Selling Price</label
-          >
+          <label class="mb-1 block font-medium text-gray-700">Selling Price</label>
           <input
             type="number"
             name="price[sellingPrice]"
@@ -87,9 +92,7 @@
             required
           />
 
-          <label class="mt-3 mb-1 block font-medium text-gray-700"
-            >Original Price</label
-          >
+          <label class="mt-3 mb-1 block font-medium text-gray-700">Original Price</label>
           <input
             type="number"
             name="price[originalPrice]"
@@ -97,9 +100,7 @@
             required
           />
 
-          <label class="mt-3 mb-1 block font-medium text-gray-700"
-            >Discount (%)</label
-          >
+          <label class="mt-3 mb-1 block font-medium text-gray-700">Discount (%)</label>
           <input
             type="number"
             name="price[discount]"
@@ -111,9 +112,10 @@
         <div class="rounded-lg bg-gray-50 p-4 shadow">
           <h3 class="mb-3 text-lg font-medium">Category</h3>
           <select name="category" class="w-full rounded border p-2">
-            <option>Mattress</option>
-            <option>Pillow</option>
-            <option>Beds</option>
+            <option selected disabled>Select category</option>
+            <% categories.forEach((category) => { %>
+              <option><%- category.name %></option>
+            <% }) %>
           </select>
         </div>
 
@@ -135,9 +137,9 @@
 
     <!-- Buttons -->
     <div class="mt-6 flex justify-end space-x-4">
-      <button type="button" class="rounded border px-4 py-2 hover:bg-gray-100">
+      <a href="/admin/products" type="button" class="rounded border px-4 py-2 hover:bg-gray-100">
         Discard
-      </button>
+      </a>
       <button
         type="submit"
         class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
@@ -147,3 +149,75 @@
     </div>
   </form>
 </div>
+
+<script>
+  //  Function to preview single image (Card Image)
+function previewImage(event, imgId) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      document.getElementById(imgId).src = e.target.result;
+      document.getElementById(imgId + 'Container').classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+//  Function to remove single image (Card Image)
+function removeImage(inputId, containerId, imgId) {
+  document.getElementById(inputId).value = ''; // Clear file input
+  document.getElementById(containerId).classList.add('hidden'); // Hide container
+  document.getElementById(imgId).src = ''; // Clear image preview
+}
+
+//  Function to preview multiple images (Product Images)
+function previewMultipleImages(event, containerId) {
+  const container = document.getElementById(containerId);
+  let files = event.target.files;
+  let existingFiles = container.dataset.files ? JSON.parse(container.dataset.files) : [];
+
+  // Convert FileList to Array and combine with existing images
+  let newFiles = [...existingFiles, ...Array.from(files)].slice(0, 4); // Limit to 4 images
+
+  container.innerHTML = ''; // Clear existing thumbnails
+
+  newFiles.forEach((file, index) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const imgWrapper = document.createElement('div');
+      imgWrapper.className = 'relative w-20 h-20';
+      imgWrapper.setAttribute('data-index', index);
+
+      imgWrapper.innerHTML = `
+        <img src="${e.target.result}" class="w-20 h-20 rounded-lg object-cover" />
+        <button 
+          type="button"
+          class="absolute top-0 right-0 text-red-500 bg-white rounded-full p-1"
+          onclick="removeMultipleImages('${containerId}', ${index})"
+        >
+          ✖
+        </button>
+      `;
+      container.appendChild(imgWrapper);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Store updated files in dataset
+  container.dataset.files = JSON.stringify(newFiles);
+}
+
+//  Function to remove a specific image from the multiple image preview
+function removeMultipleImages(containerId, index) {
+  const container = document.getElementById(containerId);
+  let files = JSON.parse(container.dataset.files);
+
+  files.splice(index, 1); // Remove selected image
+
+  container.dataset.files = JSON.stringify(files); // Update stored files
+
+  // Re-render images
+  previewMultipleImages({ target: { files } }, containerId);
+}
+</script>

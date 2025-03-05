@@ -1,17 +1,37 @@
-<h3 class="text-lg font-semibold"><%- name %></h3>
+<h3 class="pb-4 text-[20px] font-medium text-gray-800">
+  <%- product.productName %>
+</h3>
 
-<!-- Rating -->
-<div class="flex items-center text-yellow-500 text-sm">
-  ⭐⭐⭐⭐☆ <span class="text-gray-500 ml-1"><%- rating %></span>
+<div class="space-y-2">
+  <!-- Rating -->
+  <div class="flex items-center text-sm text-yellow-500">
+    <img src="/images/icons/stars.svg" alt="stars" /><span
+      class="ml-1 text-gray-500"
+      ><%- product.quantity %></span
+    >
+    <!-- now i added product quantity for rating future this would be rating -->
+  </div>
+  
+  <p class="mt-1 text-[16px] font-light text-gray-600">
+    <%- product.description %>
+  </p>
+  
+  <!-- Price -->
+  <div class="flex items-baseline space-x-4">
+    <span class="text-2xl font-medium text-[#181818]"
+      >₹<%- product.price.sellingPrice %></span
+    >
+    <span class="text-lg text-gray-400 line-through"
+      >₹<%= product.price.originalPrice %></span
+    >
+    <% if(product.price.discount){ %>
+      <p class="text-sm  font-medium text-green-600">
+      save ₹<%- product.price.discount %>
+      </p>
+    <% } %>
+  </div>
+  
+  <!-- Savings -->
+  
 </div>
 
-<p class="text-gray-600 text-sm mt-1"><%- description %></p>
-
-<!-- Price -->
-<div class="mt-2 flex items-center space-x-2">
-  <span class="text-xl font-bold"><%- salePrice %></span>
-  <span class="text-gray-400 line-through text-lg"><%= mrp %></span>
-</div>
-
-<!-- Savings -->
-<p class="text-green-600 font-medium text-sm">save <%- discount %></p>

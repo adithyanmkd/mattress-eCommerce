@@ -3,6 +3,12 @@ let tempPath = ''
 const adminSidebar = (req, res, next) => {
   res.locals.adminSidebar = [
     {
+      id: 'dashboard',
+      name: 'Dashboard',
+      href: '/admin/',
+      active: req.path === '/',
+    },
+    {
       id: 'customer-menu',
       toggleId: 'customer-icon',
       name: 'Customers',

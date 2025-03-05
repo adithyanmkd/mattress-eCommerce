@@ -11,33 +11,43 @@
     <!-- menu items looping started -->
     <% adminSidebar.forEach((items) => { %>
       <li>
-        <button
-          class="flex w-full items-center justify-between rounded-lg px-4 py-2 hover:bg-gray-200 cursor-pointer"
-          onclick="toggleDropdown('<%- items.id %>', '<%- items.toggleId %>')"
-        >
+        <% if(items.toggleId){ %>
+          <button
+            class="flex w-full items-center justify-between rounded-lg px-4 py-2 hover:bg-gray-200 cursor-pointer"
+            onclick="toggleDropdown('<%- items.id %>', '<%- items.toggleId %>')"
+          >
           <span><%- items.name %></span>
-          <span id="<%- items.toggleId %>">
-            <img
+            <span id="<%- items.toggleId %>">
+              <img
               class="w-5 transition-transform"
               id="<%- items.toggleId %>"
               src="/images/icons/down_arrow.svg"
               alt="arrow"
-            />
-          </span>
-        </button>
-        <ul id="<%- items.id %>" class="mt-2 ml-6 hidden space-y-2">
-          <!-- nested menu items looping started -->
-          <% items.nestedItems.forEach((item) => { %>
-            <li class="rounded-lg <%= item.active ? 'bg-blue-500 text-white' : '' %>">
-              <a href="<%- item.href %>" 
-                class="block w-full px-4 py-2 rounded-lg 
+              />
+            </span>
+          </button>
+          <ul id="<%- items.id %>" class="mt-2 ml-6 hidden space-y-2">
+            <!-- nested menu items looping started -->
+            <% items.nestedItems.forEach((item) => { %>
+              <li class="rounded-lg <%= item.active ? 'bg-blue-500 text-white' : '' %>">
+                <a href="<%- item.href %>" 
+                  class="block w-full px-4 py-2 rounded-lg 
                   <%= item.active ? 'text-white' : 'text-gray-900 hover:bg-gray-200' %>">
-                <%- item.name %>
-              </a>
-            </li>
-          <% }) %>
-         <!-- nested menu items looping ended -->
-        </ul>
+                  <%- item.name %>
+                </a>
+              </li>
+              <% }) %>
+              <!-- nested menu items looping ended -->
+            </ul>
+            <% }else { %>
+              <li class="rounded-lg <%= items.active ? 'bg-blue-500 text-white' : '' %>">
+                <a href="<%- items.href %>" 
+                  class="block w-full px-4 py-2 rounded-lg 
+                  <%= items.active ? 'text-white' : 'text-gray-900 hover:bg-gray-200' %>">
+                  <%- items.name %>
+                </a>
+              </li>
+            <% } %>
       </li>
     <% }) %>
     <!-- menu items looping ended -->

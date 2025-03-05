@@ -1,8 +1,10 @@
 //importing sample dataset
-import products from '../../datasets/productData.js'
+import Product from '../../models/productModel.js'
 
-const mattress = (req, res) => {
-  res.render('user/pages/Mattress', { products })
+const mattress = async (req, res) => {
+  const products = await Product.find()
+  console.log(products)
+  res.render('user/pages/products/Mattress', { products })
 }
 
 const pillows = (req, res) => {

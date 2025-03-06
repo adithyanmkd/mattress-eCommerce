@@ -6,7 +6,7 @@ import { generateOTP, sendOTP } from '../../utils/otpHelper.js'
 
 //get login
 const getLogin = (req, res) => {
-  res.render('user/pages/Login', {
+  res.render('user/pages/auth/Login', {
     layout: 'layouts/auth-layout.ejs',
     title: 'login',
     success: req.flash('success')[0],
@@ -23,7 +23,7 @@ const postLogin = async (req, res) => {
 
     // if not user redirecting into login with message
     if (!user) {
-      return res.render('user/pages/Login', {
+      return res.render('user/pages/auth/Login', {
         layout: 'layouts/auth-layout',
         title: 'login',
         error: 'User not found',
@@ -33,7 +33,7 @@ const postLogin = async (req, res) => {
 
     // if user is a google user
     if (user.isGoogleUser) {
-      return res.render('user/pages/Login', {
+      return res.render('user/pages/auth/Login', {
         layout: 'layouts/auth-layout',
         title: 'login',
         error: 'You signed up with Google. Please log in using Google Sign-In.',
@@ -42,7 +42,7 @@ const postLogin = async (req, res) => {
 
     // if user blocked by admin
     if (user.isBlocked) {
-      return res.render('user/pages/Login', {
+      return res.render('user/pages/auth/Login', {
         layout: 'layouts/auth-layout',
         title: 'login',
         error: 'Your account is currently blocked',
@@ -52,7 +52,7 @@ const postLogin = async (req, res) => {
     //compare form password and database password
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
-      return res.render('user/pages/Login', {
+      return res.render('user/pages/auth/Login', {
         layout: 'layouts/auth-layout',
         title: 'login',
         error: 'Invalid password',
@@ -68,7 +68,7 @@ const postLogin = async (req, res) => {
 
 //get register
 const getRegister = (req, res) => {
-  res.render('user/pages/Register', {
+  res.render('user/pages/auth/Register', {
     layout: 'layouts/auth-layout.ejs',
     title: 'register',
     error: req.flash('error')[0],
@@ -91,7 +91,7 @@ const postRegister = async (req, res) => {
   const existingUser = await User.findOne({ email })
   if (existingUser) {
     req.flash('error', 'User already exists')
-    return res.redirect('/login')
+    return res.redirect('/auth/login')
   }
 
   try {
@@ -107,7 +107,7 @@ const postRegister = async (req, res) => {
     await newUser.save() // save new user
     await sendOTP(email, otp) // send OTP to mail
     req.session.tempEmail = email
-    res.redirect('/otp-verify')
+    res.redirect('/auth/otp-verify')
   } catch (error) {
     res.json({ Error: error })
   }
@@ -115,7 +115,7 @@ const postRegister = async (req, res) => {
 
 // otp verify page
 const getOtpVerify = (req, res) => {
-  res.render('user/pages/otpVerify', {
+  res.render('user/pages/auth/otpVerify', {
     layout: 'layouts/auth-layout',
     title: 'verify otp',
     email: req.session.tempEmail,
@@ -133,7 +133,7 @@ const postOtpVerify = async (req, res) => {
     if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
       req.flash('error', 'Invalid or expired OTP')
       console.log(`database otp ${user.otp}`)
-      return res.redirect('/otp-verify')
+      return res.redirect('/auth/otp-verify')
     }
 
     // clear OTP field after verification
@@ -141,12 +141,19 @@ const postOtpVerify = async (req, res) => {
     user.otpExpires = null
     user.isVerified = true
 
-    await user.save()
+    await user.save() // saving user
 
-    req.flash('success', 'OTP verified! You can now log in.')
-    res.redirect('/login')
+    if (req.session.isChangingPassword) {
+      res.redirect('/auth/change-password')
+    } else {
+      req.flash('success', 'OTP verified! You can now log in.')
+      res.redirect('/auth/login')
+    }
   } catch (error) {
-    res.json({ Error: error })
+    res.json({
+      Error: error,
+      DeveloperNote: 'Error from post otp verify controller',
+    })
   }
 }
 
@@ -170,9 +177,82 @@ const getResendOtp = async (req, res) => {
 
     await sendOTP(user.email, otp) // resending OTP to mail
     req.flash('success', 'OTP has been sent successfully!')
-    res.redirect('/otp-verify')
+    res.redirect('/auth/otp-verify')
   } catch (error) {
     res.json({ Error: error })
+  }
+}
+
+// get forget password
+const getForgetPassword = (req, res) => {
+  res.render('user/pages/auth/forgetPassword', {
+    layout: 'layouts/auth-layout.ejs',
+    title: 'login',
+    error: req.flash('error')[0],
+  })
+}
+
+// get change password
+const getChangePassword = (req, res) => {
+  res.render('user/pages/auth/ChangePassword', {
+    layout: 'layouts/auth-layout.ejs',
+    title: 'login',
+  })
+}
+
+// post change password
+const postChangePassword = async (req, res) => {
+  const email = req.session.tempEmail
+  const { confirmPassword } = req.body
+
+  try {
+    const hashedPassword = await bcrypt.hash(confirmPassword, 10) // password hashing
+
+    const user = await User.findOne({ email })
+    user.password = hashedPassword
+    await user.save()
+
+    req.flash('success', 'password changed successfully!')
+    res.redirect('/auth/login')
+  } catch (error) {
+    res.json({
+      Error: error,
+      DeveloperNote: 'error from post change password controller',
+    })
+  }
+}
+
+// email submission form for forget password
+const postForgetPassword = async (req, res) => {
+  const { email } = req.body
+
+  // generate OTP
+  const otp = generateOTP()
+  const otpExpiry = Date.now() + 10 * 60 * 100 // OTP expires in 10 minutes
+
+  try {
+    const user = await User.findOne({ email }) // finding user
+
+    // checking user is exist
+    if (!user) {
+      req.flash('error', 'User not found')
+      return res.redirect('/auth/forget-password')
+    }
+
+    user.otp = otp
+    user.otpExpires = otpExpiry
+    await user.save()
+
+    await sendOTP(email, otp) // send OTP to mail
+    req.session.tempEmail = email
+    req.session.isChangingPassword = true
+
+    res.redirect('/auth/otp-verify')
+  } catch (error) {
+    res.json({
+      Error: error,
+      DeveloperNote: 'error from post forget password controller',
+    })
   }
 }
 
@@ -185,6 +265,10 @@ const authController = {
   getOtpVerify,
   postOtpVerify,
   getResendOtp,
+  getForgetPassword,
+  postForgetPassword,
+  getChangePassword,
+  postChangePassword,
 }
 
 //export controllers

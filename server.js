@@ -12,7 +12,7 @@ import passport from './config/passport.js'
 import connectDB from './config/database.js' //imported db
 
 //importing routes
-import userRouter from './routes/userRouter.js'
+import userRouter from './routes/user/index.js'
 import adminRouter from './routes/admin/index.js'
 
 const app = express()

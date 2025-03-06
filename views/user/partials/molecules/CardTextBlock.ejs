@@ -3,18 +3,23 @@
 </h3>
 
 <div class="space-y-2">
-  <!-- Rating -->
-  <div class="flex items-center text-sm text-yellow-500">
-    <img src="/images/icons/stars.svg" alt="stars" /><span
+
+  <% if(product.quantity){ %>
+    <!-- Rating -->
+    <div class="flex items-center text-sm text-yellow-500">
+      <img src="/images/icons/stars.svg" alt="stars" /><span
       class="ml-1 text-gray-500"
       ><%- product.quantity %></span
-    >
-    <!-- now i added product quantity for rating future this would be rating -->
-  </div>
+      >
+      <!-- now i added product quantity for rating future this would be rating -->
+  <% } %>
   
-  <p class="mt-1 text-[16px] font-light text-gray-600">
-    <%- product.description %>
-  </p>
+  </div>
+    <% if(product.description){ %>
+      <p class="mt-1 text-[16px] font-light text-gray-600">
+        <%- product.description %>
+      </p>
+    <% } %>
   
   <!-- Price -->
   <div class="flex items-baseline space-x-4">

@@ -42,7 +42,7 @@
   <!-- heading block and hero image -->
 
   <!-- auth image passing -->
-  <%- include("../partials/atoms/AuthImage.ejs", {...authImage}) %>
+  <%- include("../../partials/atoms/AuthImage.ejs", {...authImage}) %>
 
   <!-- heading block and hero image ended -->
 
@@ -50,11 +50,11 @@
   <form
     class="w-96"
     id="user-login-form"
-    action="/login"
+    action="/auth/login"
     method="post"
     enctype="application/x-www-form-urlencoded"
   >
-    <%- include("../partials/molecules/AuthHeading.ejs", {...authHeading}) %>
+    <%- include("../../partials/molecules/AuthHeading.ejs", {...authHeading}) %>
     <ul class="space-y-6">
       <% if(typeof success !== "undefined" && success) { %>
       <li
@@ -66,8 +66,11 @@
       <% } %>
 
       <% inputFields.forEach((field) => { %>
-      <%- include("../partials/atoms/InputField.ejs", {...field}) %>
+      <%- include("../../partials/atoms/InputField.ejs", {...field}) %>
       <% }) %>
+      <p>
+         <a class="pl-1 text-[#0F3DDE]" href="/auth/forget-password">Forgot your password?</a>
+     </p>
 
       <% if(typeof error !== "undefined" && error) { %>
       <li
@@ -104,7 +107,7 @@
 </a>
     <p class="pt-6 text-center">
       Don't have an account?
-      <span><a class="pl-1 text-[#0F3DDE]" href="/register">Sign Up</a></span>
+      <span><a class="pl-1 text-[#0F3DDE]" href="/auth/register">Sign Up</a></span>
     </p>
   </form>
 

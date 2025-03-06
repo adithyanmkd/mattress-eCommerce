@@ -1,0 +1,19 @@
+<% 
+const product = {
+    productName: "Royal Smart Bed Set",
+    price: {
+        sellingPrice: "53,499",
+        originalPrice: "58,999",
+        discount: "5500"
+    }
+}
+%>
+
+<div>
+  <div>
+    <img src="/images/products/card-images/mattress.svg" alt="mattress image" />
+  </div>
+  <div>
+    <%- include("../molecules/CardTextBlock.ejs", {product}) %>
+  </div>
+</div>

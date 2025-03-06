@@ -7,7 +7,7 @@
         We have sent the verification code to your email address.
       </p>
 
-      <form action="/otp-verify" method="post" class="mt-5">
+      <form action="/auth/otp-verify" method="post" class="mt-5">
         <input class="hidden" name="email" type="text" value="<%- email %>" />
         <input
           type="text"
@@ -27,7 +27,7 @@
           <%- error %>
         </div>
         <% } %>
-        <!-- error message box ended -->
+        <!-- error mesge box ended -->
 
         <!-- Success message box started -->
         <% if (typeof success !== "undefined" && success) { %>
@@ -49,7 +49,7 @@
 
       <p class="mt-4 text-sm text-gray-500">
         Didn't get OTP?
-        <a href="/resend-otp" class="font-medium text-blue-500">Resend it</a>
+        <a href="/auth/resend-otp" class="font-medium text-blue-500">Resend it</a>
       </p>
     </div>
 

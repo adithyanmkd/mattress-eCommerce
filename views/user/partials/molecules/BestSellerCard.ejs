@@ -1,19 +1,92 @@
 <% 
-const product = {
-    productName: "Royal Smart Bed Set",
-    price: {
+  const bestSellers = [
+    {
+      productName: "Royal Smart Bed Set",
+      price: {
         sellingPrice: "53,499",
-        originalPrice: "58,999",
-        discount: "5500"
+        originalPrice: "68,999",
+        discount: "15,500"
+      },
+      image: {
+        path: "/images/products/card-images/1741171573148-black-mattress.webp",
+        alt: "Royal Smart Bed Set"
+      }
+    },
+    {
+      productName: "Cloud Mattress",
+      price: {
+        sellingPrice: "32,999",
+        originalPrice: "39,999",
+        discount: "7,000"
+      },
+      image: {
+        path: "/images/users/images/mattress/black-mattress.webp",
+        alt: "Cloud Mattress"
+      }
+    },
+    {
+      productName: "Pillow",
+      price: {
+        sellingPrice: "1,999",
+        originalPrice: "2,199",
+        discount: "200"
+      },
+      image: {
+        path: "/images/users/images/mattress/hybrid-mattress-1.webp",
+        alt: "Comfortable Pillow"
+      }
+    },
+    {
+      productName: "Hybrid Mattress",
+      price: {
+        sellingPrice: "10,699",
+        originalPrice: "12,812",
+        discount: "2,113"
+      },
+      image: {
+        path: "/images/users/images/mattress/royal-mattress.webp",
+        alt: "Hybrid Mattress"
+      }
+    },
+    {
+      productName: "Latex Mattress",
+      price: {
+        sellingPrice: "13,499",
+        originalPrice: "24,544",
+        discount: "11,045"
+      },
+      image: {
+        path: "/images/users/images/mattress/hybrid-mattress-4.webp",
+        alt: "Latex Mattress"
+      }
+    },
+    {
+      productName: "Puffy Outlast Mattress Topper",
+      price: {
+        sellingPrice: "9,899",
+        originalPrice: "14,499",
+        discount: "4,600"
+      },
+      image: {
+        path: "/images/products/card-images/mattress.svg",
+        alt: "Puffy Outlast Mattress Topper"
+      }
     }
-}
+  ];
 %>
 
-<div>
-  <div>
-    <img src="/images/products/card-images/mattress.svg" alt="mattress image" />
-  </div>
-  <div>
-    <%- include("../molecules/CardTextBlock.ejs", {product}) %>
+
+<div class="container mx-auto mt-8">
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+    <% bestSellers.forEach((product) => { %>
+      <div class="bg-white p-4 rounded-lg shadow">
+        <img src="<%- product.image.path %>" 
+             alt="<%- product.image.alt %>" 
+             class="w-full h-80 object-cover rounded-lg"/>
+        <div>
+          <%- include("../../partials/molecules/CardTextBlock.ejs", { product }) %>
+        </div>
+      </div>
+    <% }) %>
   </div>
 </div>

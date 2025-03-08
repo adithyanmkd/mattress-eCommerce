@@ -1,3 +1,6 @@
+import path from 'path'
+import fs from 'fs'
+
 import Category from '../../models/catagoryModel.js'
 
 // get category add page
@@ -84,11 +87,85 @@ const deleteCategory = async (req, res) => {
   }
 }
 
+// edit category
+const editCategory = async (req, res) => {
+  try {
+    const categoryId = req.params.id
+    const category = await Category.findById(categoryId)
+
+    if (!category) {
+      return res.status(404).render('admin/pages/categories/EditCategory', {
+        layout: 'layouts/admin-layout',
+        title: 'Edit Category',
+        errorMessage: 'Category not found',
+      })
+    }
+
+    res.render('admin/pages/categories/EditCategory', {
+      layout: 'layouts/admin-layout',
+      title: 'Edit Category',
+      category,
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).render('admin/pages/categories/EditCategory', {
+      layout: 'layouts/admin-layout',
+      title: 'Edit Category',
+      errorMessage: 'An error occurred while fetching the category',
+    })
+  }
+}
+
+// post edit category
+const postEditCategory = async (req, res) => {
+  console.log('Request Body:', req.body)
+  console.log('Uploaded File:', req.file)
+
+  try {
+    const categoryId = req.params.id
+    const category = await Category.findById(categoryId)
+
+    if (!category) {
+      return res.status(404).json({ error: 'Category not found' })
+    }
+
+    const { name, description } = req.body
+    let imagePath = category.image.path.replace(/.*\/public\//, '/')
+    console.log(imagePath, 'here------')
+
+    if (req.file) {
+      // If an old image exists, delete it
+      if (imagePath) {
+        const oldImagePath = path.join('public', imagePath) // Convert stored path to absolute path
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath)
+        }
+      }
+
+      // Save only relative path
+      imagePath = req.file.path.replace(/^public\//, '/')
+    }
+
+    // Update category
+    category.name = name
+    category.description = description
+    category.image.path = imagePath
+    await category.save()
+
+    res.redirect('/admin/categories')
+  } catch (error) {
+    console.error(error)
+    res.redirect('/admin/categories')
+  }
+}
+
 const categoryController = {
   getAddCategory,
   getCategoryList,
   postAddCategory,
   deleteCategory,
+  editCategory,
+  postEditCategory,
 }
 
 // export controller

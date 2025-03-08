@@ -5,7 +5,7 @@ const adminSidebar = (req, res, next) => {
     {
       id: 'dashboard',
       name: 'Dashboard',
-      href: '/admin/',
+      href: '/admin',
       active: req.path === '/',
     },
     {
@@ -46,6 +46,18 @@ const adminSidebar = (req, res, next) => {
           active: req.path === '/categories',
         },
       ],
+    },
+    {
+      id: 'banner',
+      name: 'Banner',
+      href: '#',
+      active: req.path === '/banner',
+    },
+    {
+      id: 'settings',
+      name: 'Settings',
+      href: '#',
+      active: req.path === '/settings',
     },
   ]
   next()

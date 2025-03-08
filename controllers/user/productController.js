@@ -47,6 +47,21 @@ const products = async (req, res) => {
   }
 }
 
+const productDetails = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id)
+    if (!product) {
+      return res.status(404).send('Product not found')
+    }
+    res.render('user/pages/products/ProductDetails', {
+      product,
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Server Error')
+  }
+}
+
 // Individual Category Pages (Optional)
 const mattress = async (req, res) => {
   res.render('user/pages/products/Mattress')
@@ -61,6 +76,7 @@ const productController = {
   mattress,
   pillows,
   products,
+  productDetails,
 }
 
 export default productController

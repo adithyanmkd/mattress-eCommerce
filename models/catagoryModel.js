@@ -8,8 +8,6 @@ const categorySchema = mongoose.Schema(
       path: {
         type: String,
         required: true,
-        default:
-          '/images/products/card-images/week-8/public/images/products/card-images/1741063678153-hybrid-mattress-1.webp',
       },
       alt: { type: String, default: 'category image' },
     },

@@ -1,0 +1,77 @@
+<h2 class="mb-4 text-2xl font-semibold">Edit Category</h2>
+
+<div class="rounded-lg bg-white p-6 shadow-md">
+  <form
+    action="/admin/categories/edit/<%= category._id %>"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    <div class="mb-4">
+      <label class="block font-medium text-gray-700">Category Name</label>
+      <input
+        type="text"
+        name="name"
+        value="<%= category.name %>"
+        class="mt-1 w-full rounded-lg border px-3 py-2"
+        required
+      />
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-gray-700">Description</label>
+      <textarea
+        name="description"
+        class="mt-1 w-full rounded-lg border px-3 py-2"
+        required
+      >
+<%= category.description %></textarea
+      >
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium text-gray-700">Category Image</label>
+      <div class="flex items-center gap-4">
+        <img
+          id="previewImage"
+          src="<%= category.image ? category.image.path : '/images/default-category.jpg' %>"
+          alt="Category Image"
+          class="h-24 w-24 rounded-lg object-cover"
+        />
+        <input
+          type="file"
+          name="image"
+          class="rounded-lg border p-2"
+          onchange="previewFile()"
+        />
+      </div>
+    </div>
+
+    <div class="mt-4 flex justify-end gap-3">
+      <a href="/admin/categories" class="rounded-lg bg-gray-300 px-4 py-2"
+        >Cancel</a
+      >
+      <button
+        type="submit"
+        class="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+      >
+        Update Category
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  function previewFile() {
+      const file = document.querySelector('input[type=file]').files[0];
+      const preview = document.getElementById('previewImage');
+      const reader = new FileReader();
+
+      reader.onloadend = function () {
+          preview.src = reader.result;
+      };
+
+      if (file) {
+          reader.readAsDataURL(file);
+      }
+  }
+</script>

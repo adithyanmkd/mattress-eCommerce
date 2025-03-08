@@ -4,7 +4,7 @@ import Product from '../../models/productModel.js'
 
 // get add product page
 const getProduct = async (req, res) => {
-  const categories = await Category.find()
+  const categories = await Category.find({ isDeleted: false })
   res.render('admin/pages/products/AddProduct', {
     layout: 'layouts/admin-layout',
     categories,

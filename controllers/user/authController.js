@@ -71,7 +71,7 @@ const postLogin = async (req, res) => {
       //   error: 'Invalid password',
       //   email,
       // })
-      res.status(401).json({ error: 'Invalid password.' })
+      return res.status(401).json({ error: 'Invalid password.' })
     }
 
     res.json({ success: true, message: 'Login successful' })

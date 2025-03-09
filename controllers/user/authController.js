@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt'
+import validator from 'validator'
 
 //import model
 import { User } from '../../models/index.js'
@@ -18,49 +19,62 @@ const getLogin = (req, res) => {
 const postLogin = async (req, res) => {
   const { email, password } = req.body
 
+  if (!validator.isEmail(email) || /[#$/%^&*]/.test(email)) {
+    return res.status(400).json({ error: 'Invalid email format!' })
+  }
+
   try {
     const user = await User.findOne({ email }) // fetch user
 
     // if not user redirecting into login with message
     if (!user) {
-      return res.render('user/pages/auth/Login', {
-        layout: 'layouts/auth-layout',
-        title: 'login',
-        error: 'User not found',
-        email,
-      })
+      // return res.render('user/pages/auth/Login', {
+      //   layout: 'layouts/auth-layout',
+      //   title: 'login',
+      //   error: 'User not found',
+      //   email,
+      // })
+      return res.status(404).json({ error: 'User not found.' })
     }
 
     // if user is a google user
     if (user.isGoogleUser) {
-      return res.render('user/pages/auth/Login', {
-        layout: 'layouts/auth-layout',
-        title: 'login',
+      // return res.render('user/pages/auth/Login', {
+      //   layout: 'layouts/auth-layout',
+      //   title: 'login',
+      //   error: 'You signed up with Google. Please log in using Google Sign-In.',
+      // })
+      return res.status(403).json({
         error: 'You signed up with Google. Please log in using Google Sign-In.',
       })
     }
 
     // if user blocked by admin
     if (user.isBlocked) {
-      return res.render('user/pages/auth/Login', {
-        layout: 'layouts/auth-layout',
-        title: 'login',
-        error: 'Your account is currently blocked',
-      })
+      // return res.render('user/pages/auth/Login', {
+      //   layout: 'layouts/auth-layout',
+      //   title: 'login',
+      //   error: 'Your account is currently blocked',
+      // })
+      return res
+        .status(403)
+        .json({ error: 'Your account is currently blocked.' })
     }
 
     //compare form password and database password
     const isMatch = await bcrypt.compare(password, user.password)
+
     if (!isMatch) {
-      return res.render('user/pages/auth/Login', {
-        layout: 'layouts/auth-layout',
-        title: 'login',
-        error: 'Invalid password',
-        email,
-      })
+      // return res.render('user/pages/auth/Login', {
+      //   layout: 'layouts/auth-layout',
+      //   title: 'login',
+      //   error: 'Invalid password',
+      //   email,
+      // })
+      res.status(401).json({ error: 'Invalid password.' })
     }
 
-    res.redirect('/')
+    res.json({ success: true, message: 'Login successful' })
   } catch (error) {
     res.json({ Error: error, DeveloperError: 'post login error' })
   }
@@ -79,6 +93,7 @@ const getRegister = (req, res) => {
 // register new user
 const postRegister = async (req, res) => {
   const { fullname, email, password } = req.body // accessing values from form
+  console.log(req.body)
 
   // hashed password
   const hashedPassword = await bcrypt.hash(password, 10)
@@ -90,8 +105,7 @@ const postRegister = async (req, res) => {
   // check is the user already exists
   const existingUser = await User.findOne({ email })
   if (existingUser) {
-    req.flash('error', 'User already exists')
-    return res.redirect('/auth/login')
+    res.status(409).json({ error: 'User already exists!.' })
   }
 
   try {

@@ -1,13 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
   const pathname = window.location.pathname
 
-  if (pathname.includes('auth/login')) login()
-  else if (pathname.includes('auth/register')) register()
+  if (pathname.includes('/auth/login')) login()
+  else if (pathname.includes('/auth/register')) register()
+  else if (pathname.includes('/auth/otp-verify')) otpVerify()
 
   let errorTimeout // Store timeout reference
 
   // show error message
-  let displayError = (message) => {
+  function displayError(message) {
     let errorBox = document.querySelector('#error-box') // accessing error box
 
     errorBox.innerHTML = message
@@ -22,8 +23,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 5000)
   }
 
+  // show error message
+  function displaySuccess(message) {
+    let successBox = document.querySelector('#success-box') // accessing success box
+
+    successBox.innerHTML = message
+    successBox.classList.remove('hidden')
+
+    // Clear any existing timeout to prevent multiple timers
+    clearTimeout(successBox)
+
+    // after 5 seconds message will be hide
+    successTimeout = setTimeout(() => {
+      successBox.classList.add('hidden')
+    }, 5000)
+  }
+
   // hide error message
-  let hideError = () => {
+  function hideError() {
     let errorBox = document.querySelector('#error-box')
     errorBox.classList.add('hidden')
   }
@@ -31,6 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // login validation & AJAX
   function login() {
     const loginForm = document.querySelector('#user-login-form')
+    let successMessage = sessionStorage.getItem('successMessage')
+
+    if (successMessage) {
+      displaySuccess(successMessage)
+      sessionStorage.removeItem('successMessage')
+    }
 
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault()
@@ -127,9 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let data = await response.json() // converting api json data into javascript object
 
         if (response.ok) {
-          window.location.href = '/auth/login'
+          window.location.href = '/auth/otp-verify'
         } else {
-          console.log(data.error)
+          displayError(data.error)
         }
       } catch (error) {
         console.log({
@@ -137,6 +160,48 @@ document.addEventListener('DOMContentLoaded', () => {
           DeveloperNote: 'error while registering user ',
         })
       }
+    })
+  }
+
+  // otp verify
+  function otpVerify() {
+    const otpForm = document.querySelector('#otp-form')
+
+    otpForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      const email = otpForm.querySelector("[name='email']").value.trim()
+      const otp = otpForm.querySelector('#otp').value.trim()
+
+      let converetd = Number(otp) // converting otp
+
+      if (!otp) {
+        displayError('Please enter your otp.')
+        return
+      } else if (isNaN(converetd)) {
+        displayError('Please enter a valid number.')
+        return
+      }
+
+      // hide error box
+      hideError()
+
+      try {
+        const response = await fetch('/auth/otp-verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp: String(otp) }),
+        })
+
+        const data = await response.json()
+
+        if (response.ok) {
+          sessionStorage.setItem('successMessage', 'OTP verified successfully!')
+          window.location.href = '/auth/login'
+        } else {
+          displayError(data.error)
+        }
+      } catch (error) {}
     })
   }
 })

@@ -105,7 +105,7 @@ const postRegister = async (req, res) => {
   // check is the user already exists
   const existingUser = await User.findOne({ email })
   if (existingUser) {
-    res.status(409).json({ error: 'User already exists!.' })
+    return res.status(409).json({ error: 'User already exists!' })
   }
 
   try {
@@ -121,7 +121,8 @@ const postRegister = async (req, res) => {
     await newUser.save() // save new user
     await sendOTP(email, otp) // send OTP to mail
     req.session.tempEmail = email
-    res.redirect('/auth/otp-verify')
+    // res.redirect('/auth/otp-verify')
+    res.status(200).json({ success: true })
   } catch (error) {
     res.json({ Error: error })
   }
@@ -143,11 +144,13 @@ const postOtpVerify = async (req, res) => {
   const { email, otp } = req.body // accessing form email and otp
   const user = await User.findOne({ email }) // finding user from database
 
+  console.log(`database otp ${user.otp}`)
   try {
     if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
-      req.flash('error', 'Invalid or expired OTP')
-      console.log(`database otp ${user.otp}`)
-      return res.redirect('/auth/otp-verify')
+      // req.flash('error', 'Invalid or expired OTP')
+      // return res.redirect('/auth/otp-verify')
+
+      return res.status(400).json({ error: 'Invalid or expired OTP' })
     }
 
     // clear OTP field after verification
@@ -158,10 +161,10 @@ const postOtpVerify = async (req, res) => {
     await user.save() // saving user
 
     if (req.session.isChangingPassword) {
-      res.redirect('/auth/change-password')
+      return res.redirect('/auth/change-password')
     } else {
       req.flash('success', 'OTP verified! You can now log in.')
-      res.redirect('/auth/login')
+      res.status(200).json({ success: true })
     }
   } catch (error) {
     res.json({

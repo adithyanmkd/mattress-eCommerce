@@ -56,14 +56,11 @@
   >
     <%- include("../../partials/molecules/AuthHeading.ejs", {...authHeading}) %>
     <ul class="space-y-6">
-      <% if(typeof success !== "undefined" && success) { %>
       <li
         id="success-box"
         class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 hidden"
       >
-        <%- success %>
       </li>
-      <% } %>
 
       <% inputFields.forEach((field) => { %>
       <%- include("../../partials/atoms/InputField.ejs", {...field}) %>

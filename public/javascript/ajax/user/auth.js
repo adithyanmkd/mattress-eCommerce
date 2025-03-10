@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (pathname.includes('/auth/login')) login()
   else if (pathname.includes('/auth/register')) register()
   else if (pathname.includes('/auth/otp-verify')) otpVerify()
+  else if (pathname.includes('/auth/forget-password')) forgetPassword()
+  else if (pathname.includes('/auth/change-password')) changePassword()
 
   let errorTimeout // Store timeout reference
 
@@ -100,6 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // register validation && AJAX
   function register() {
     let registerForm = document.querySelector('#user-register-form')
+    let loadingSpinner = document.querySelector('#loading-spinner')
+    let submitButton = registerForm.querySelector("[type='submit']")
+    let buttonText = document.querySelector('#button-text')
 
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault()
@@ -108,7 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
         .querySelector("[name='fullname']")
         .value.trim()
       let email = registerForm.querySelector("[name='email']").value.trim()
-      let password = registerForm.querySelector("[name='password'").value.trim()
+      let password = registerForm
+        .querySelector("[name='password']")
+        .value.trim()
       let confirmPassword = registerForm
         .querySelector('#confirmPassword')
         .value.trim()
@@ -140,6 +147,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // hide error box
       hideError()
 
+      // show spinner
+      submitButton.disabled = true
+      buttonText.innerHTML = 'Loading...'
+      loadingSpinner.classList.remove('hidden')
+
       try {
         let response = await fetch('/auth/register', {
           method: 'POST',
@@ -159,6 +171,10 @@ document.addEventListener('DOMContentLoaded', () => {
           Error: error,
           DeveloperNote: 'error while registering user ',
         })
+      } finally {
+        submitButton.disabled = false
+        buttonText.innerHTML = `Register`
+        loadingSpinner.classList.add('hidden')
       }
     })
   }
@@ -194,14 +210,128 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         const data = await response.json()
+        console.log(data)
+
+        const isChangingPassword = sessionStorage.getItem('isChangingPassword')
+
+        // if (isChangingPassword) {
+        //   window.location.href = '/auth/change-password'
+        //   return
+        // }
 
         if (response.ok) {
           sessionStorage.setItem('successMessage', 'OTP verified successfully!')
-          window.location.href = '/auth/login'
+          isChangingPassword
+            ? (window.location.href = '/auth/change-password')
+            : (window.location.href = '/auth/login')
+        } else {
+          displayError(data.error)
+        }
+      } catch (error) {
+        console.error({
+          Error: error,
+          DeveloperNote: 'Error from otpVerifty Ajax function',
+        })
+      }
+    })
+  }
+
+  // forget password validation & AJAX
+  function forgetPassword() {
+    const forgetPassForm = document.querySelector('#forget-password-form')
+
+    forgetPassForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      let email = forgetPassForm.querySelector("[name='email']").value.trim()
+
+      if (!email) {
+        displayError('Please enter your Email.')
+        return
+      }
+
+      try {
+        const response = await fetch('/auth/forget-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        })
+
+        const data = await response.json()
+
+        if (response.ok) {
+          sessionStorage.setItem('isChangingPassword', true)
+          window.location.href = '/auth/otp-verify'
         } else {
           displayError(data.error)
         }
       } catch (error) {}
+    })
+  }
+
+  // change password validation & AJAX
+  function changePassword() {
+    const changePassForm = document.querySelector('#change-password-form')
+    let successMessage = sessionStorage.getItem('successMessage')
+
+    if (successMessage) {
+      displaySuccess(successMessage)
+      sessionStorage.removeItem('successMessage')
+    }
+
+    changePassForm.addEventListener('submit', async (e) => {
+      e.preventDefault()
+
+      const password = changePassForm.querySelector('#password').value.trim()
+      const confirmPassword = changePassForm
+        .querySelector('#confirm-password')
+        .value.trim()
+
+      // client side form validations
+      if (!password && !confirmPassword) {
+        displayError('Both fields are required!')
+        return
+      } else if (!password) {
+        displayError('Please enter new password')
+        return
+      } else if (password.length < 6) {
+        displayError('Password must be 6 characters.')
+        return
+      } else if (!confirmPassword) {
+        displayError('Please enter confirm password')
+        return
+      } else if (confirmPassword !== password) {
+        displayError('Passwords do not match. Please try again!')
+        return
+      }
+
+      // hide error
+      hideError()
+
+      try {
+        const response = await fetch('/auth/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ confirmPassword }),
+        })
+
+        let data = await response.json()
+
+        if (response.ok) {
+          sessionStorage.setItem(
+            'successMessage',
+            'Password changed successfully.',
+          )
+          window.location.href = '/auth/login'
+        } else {
+          displayError(data.message)
+        }
+      } catch (error) {
+        console.error({
+          Error: error,
+          DeveloperNote: 'Error from change password ajax',
+        })
+      }
     })
   }
 })

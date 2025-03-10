@@ -20,20 +20,11 @@
         <!-- error message box started -->
         <div
           id="error-box"
-          class="mt-4 hidden mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:text-red-400"
-        >
-        </div>
+          class="mt-4 mb-4 hidden rounded-lg bg-red-50 p-4 text-sm text-red-800 dark:text-red-400"
+        ></div>
         <!-- error mesge box ended -->
 
         <!-- Success message box started -->
-        <% if (typeof success !== "undefined" && success) { %>
-        <div
-          id="success-box"
-          class="mt-4 mb-4 rounded-lg border border-green-400 bg-green-50 p-4 text-sm text-green-800"
-        >
-          <%- success %>
-        </div>
-        <% } %>
         <!-- Success message box ended -->
         <button
           type="submit"
@@ -45,7 +36,9 @@
 
       <p class="mt-4 text-sm text-gray-500">
         Didn't get OTP?
-        <a href="/auth/resend-otp" class="font-medium text-blue-500">Resend it</a>
+        <a href="/auth/resend-otp" class="font-medium text-blue-500"
+          >Resend it</a
+        >
       </p>
     </div>
 

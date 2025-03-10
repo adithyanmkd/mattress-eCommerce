@@ -160,12 +160,13 @@ const postOtpVerify = async (req, res) => {
 
     await user.save() // saving user
 
-    if (req.session.isChangingPassword) {
-      return res.redirect('/auth/change-password')
-    } else {
-      req.flash('success', 'OTP verified! You can now log in.')
-      res.status(200).json({ success: true })
-    }
+    // req.flash('success', 'OTP verified! You can now log in.')
+    res.status(200).json({ success: true })
+
+    // if (req.session.isChangingPassword) {
+    //   return res.redirect('/auth/change-password')
+    // } else {
+    // }
   } catch (error) {
     res.json({
       Error: error,
@@ -229,8 +230,9 @@ const postChangePassword = async (req, res) => {
     user.password = hashedPassword
     await user.save()
 
-    req.flash('success', 'password changed successfully!')
-    res.redirect('/auth/login')
+    // req.flash('success', 'password changed successfully!')
+    // res.redirect('/auth/login')
+    res.status(200).json({ success: true })
   } catch (error) {
     res.json({
       Error: error,
@@ -243,18 +245,25 @@ const postChangePassword = async (req, res) => {
 const postForgetPassword = async (req, res) => {
   const { email } = req.body
 
-  // generate OTP
-  const otp = generateOTP()
-  const otpExpiry = Date.now() + 10 * 60 * 100 // OTP expires in 10 minutes
-
   try {
+    if (!validator.isEmail(email) || /[#$/%^&*]/.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format!' })
+    }
+
     const user = await User.findOne({ email }) // finding user
 
     // checking user is exist
     if (!user) {
-      req.flash('error', 'User not found')
-      return res.redirect('/auth/forget-password')
+      // req.flash('error', 'User not found')
+      // return res.redirect('/auth/forget-password')
+      return res.status(404).json({ error: 'User not found!' })
     }
+
+    // generate OTP
+    const otp = generateOTP()
+    const otpExpiry = Date.now() + 10 * 60 * 100 // OTP expires in 10 minutes
+
+    console.log(`Generated otp is: ${otp}`)
 
     user.otp = otp
     user.otpExpires = otpExpiry
@@ -264,7 +273,8 @@ const postForgetPassword = async (req, res) => {
     req.session.tempEmail = email
     req.session.isChangingPassword = true
 
-    res.redirect('/auth/otp-verify')
+    // res.redirect('/auth/otp-verify')
+    res.status(200).json({ success: true, message: 'OTP sent successfully.' })
   } catch (error) {
     res.json({
       Error: error,

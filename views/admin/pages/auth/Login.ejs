@@ -34,9 +34,9 @@
 
   <div class="pb-16 md:pb-0">
     <!-- auth image passing -->
-    <%- include("../partials/atoms/AuthImage.ejs", {...authImage}) %>
+    <%- include("../../partials/atoms/AuthImage.ejs", {...authImage}) %>
     <!-- auth heading block -->
-    <%- include("../partials/molecules/AuthHeading.ejs", {...authHeading, classname: "md:hidden"}) %>
+    <%- include("../../partials/molecules/AuthHeading.ejs", {...authHeading, classname: "md:hidden"}) %>
   </div>
 
   <!-- heading block and hero image ended -->
@@ -49,20 +49,19 @@
     method="post"
     enctype="application/x-www-form-urlencoded"
   >
-    <%- include("../partials/molecules/AuthHeading", {...authHeading}) %>
+    <%- include("../../partials/molecules/AuthHeading", {...authHeading}) %>
     <ul class="space-y-6">
       <% inputFields.forEach((field) => { %>
-      <%- include("../partials/atoms/InputField", {...field}) %>
+      <%- include("../../partials/atoms/InputField", {...field}) %>
       <% }) %>
 
-      <% if(typeof error !== "undefined" && error) { %>
+      <!-- error box started -->
       <li
         id="error-box"
-        class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:text-red-400"
+        class="p-4 mb-4 hidden text-sm text-red-800 rounded-lg bg-red-50 dark:text-red-400"
       >
-        <%- error %>
       </li>
-      <% } %>
+      <!-- error box ended -->
       <li class="pt-4">
         <button
           class="w-full rounded-xl bg-[#1A1A1A] py-4 text-white hover:cursor-pointer hover:bg-black"

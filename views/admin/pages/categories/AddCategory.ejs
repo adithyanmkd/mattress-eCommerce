@@ -1,170 +1,252 @@
-<form
-  action="/admin/categories/add"
-  method="POST"
-  enctype="multipart/form-data"
-  class="mx-auto max-w-3xl rounded-lg bg-white p-6 shadow-lg"
-  onsubmit="return validateForm()"
->
-  <h2 class="mb-4 text-2xl font-semibold text-gray-800">Add a New Category</h2>
-
-  <div class="flex gap-6">
-    <!-- Left Side - Category Form Fields -->
-    <div class="w-1/2 space-y-4">
-      <!-- Category Name -->
-      <div>
-        <label class="mb-1 block font-medium text-gray-700"
-          >Category Name</label
-        >
-        <input
-          type="text"
-          name="categoryName"
-          class="w-full rounded-lg border border-gray-300 p-3 focus:ring focus:ring-red-300"
-          placeholder="Enter category name"
-          required
-        />
-        <p id="categoryNameError" class="mt-1 hidden text-sm text-red-500"></p>
-      </div>
-
-      <!-- Category Description -->
-      <div>
-        <label class="mb-1 block font-medium text-gray-700">Description</label>
-        <textarea
-          name="description"
-          class="w-full rounded-lg border border-gray-300 p-3 focus:ring focus:ring-red-300"
-          placeholder="Enter category description"
-          required
-        ></textarea>
-        <p id="descriptionError" class="mt-1 hidden text-sm text-red-500"></p>
-      </div>
-    </div>
-
-    <!-- Right Side - Image Upload -->
-    <div class="flex w-1/2 flex-col items-center justify-center">
-      <label
-        class="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 transition hover:border-blue-400 hover:bg-gray-100"
-      >
-        <div class="flex flex-col items-center">
+<!-- Main Container -->
+<div x-data="categoryForm()">
+  <!-- Error Modal -->
+  <div
+    x-show="backendError"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+    @click.away="backendError = null"
+  >
+    <div class="w-96 rounded-lg bg-white p-6 shadow-xl">
+      <div class="flex items-start gap-3">
+        <div class="shrink-0">
           <svg
-            class="mb-2 h-12 w-12 text-gray-400"
+            class="h-6 w-6 text-red-500"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M7 16l-4-4m0 0l4-4m-4 4h16M3 12h16m-5 4l4-4m-4 4l4-4"
-            ></path>
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
           </svg>
-          <span class="text-sm text-gray-600"
-            >Click to upload or drag & drop</span
-          >
         </div>
-        <input
-          type="file"
-          name="categoryImage"
-          accept="image/*"
-          class="hidden"
-          id="categoryImageInput"
-        />
-      </label>
-
-      <!-- Image Preview -->
-      <div class="mt-3 hidden" id="imagePreviewContainer">
-        <p class="mb-1 text-sm text-gray-500">Selected Image:</p>
-        <img
-          id="imagePreview"
-          class="h-40 w-full rounded-lg border border-gray-300 object-cover"
-          alt="Preview"
-        />
+        <div>
+          <h3 class="mb-2 text-lg font-semibold">Error Occurred</h3>
+          <p class="text-gray-600" x-text="backendError"></p>
+        </div>
       </div>
-
-      <!-- Validation Message -->
-      <p id="imageError" class="mt-2 hidden text-sm text-red-500">
-        ⚠️ Please upload a category image.
-      </p>
+      <div class="mt-4 flex justify-end">
+        <button
+          @click="backendError = null"
+          class="rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+        >
+          OK
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- Action Buttons -->
-  <div class="mt-6 flex justify-end space-x-3">
-    <button
-      type="button"
-      onclick="window.history.back();"
-      class="rounded-lg border border-gray-400 px-5 py-2 text-gray-700 transition hover:bg-gray-200"
-    >
-      Cancel
-    </button>
-    <button
-      type="submit"
-      class="rounded-lg bg-blue-500 px-5 py-2 text-white transition hover:bg-blue-700"
-    >
-      Add Category
-    </button>
-  </div>
-</form>
+  <!-- Form -->
+  <form
+    action="/admin/categories/add"
+    method="POST"
+    enctype="multipart/form-data"
+    class="mx-auto max-w-3xl rounded-lg bg-white p-6 shadow-lg"
+    @submit.prevent="submitForm"
+  >
+    <h2 class="mb-4 text-2xl font-semibold text-gray-800">
+      Add a New Category
+    </h2>
 
-<!-- JavaScript for Form Validation -->
+    <div class="flex gap-6">
+      <!-- Left Side - Category Form Fields -->
+      <div class="w-1/2 space-y-4">
+        <!-- Category Name -->
+        <div>
+          <label class="mb-1 block font-medium text-gray-700"
+            >Category Name</label
+          >
+          <input
+            type="text"
+            name="categoryName"
+            class="w-full rounded-lg border border-gray-300 p-3 focus:ring focus:ring-red-300"
+            placeholder="Enter category name"
+            x-model="categoryName"
+            required
+          />
+          <p
+            id="categoryNameError"
+            class="mt-1 text-sm text-red-500"
+            x-text="errors.categoryName"
+          ></p>
+        </div>
+
+        <!-- Category Description -->
+        <div>
+          <label class="mb-1 block font-medium text-gray-700"
+            >Description</label
+          >
+          <textarea
+            name="description"
+            class="w-full rounded-lg border border-gray-300 p-3 focus:ring focus:ring-red-300"
+            placeholder="Enter category description"
+            x-model="description"
+            required
+          ></textarea>
+          <p
+            id="descriptionError"
+            class="mt-1 text-sm text-red-500"
+            x-text="errors.description"
+          ></p>
+        </div>
+      </div>
+
+      <!-- Right Side - Image Upload -->
+      <div class="flex w-1/2 flex-col items-center justify-center">
+        <!-- File Input -->
+        <label
+          class="flex h-32 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 transition hover:border-blue-400 hover:bg-gray-100"
+        >
+          <div class="flex flex-col items-center">
+            <svg
+              class="mb-2 h-12 w-12 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M7 16l-4-4m0 0l4-4m-4 4h16M3 12h16m-5 4l4-4m-4 4l4-4"
+              />
+            </svg>
+            <span class="text-sm text-gray-600"
+              >Click to upload or drag & drop</span
+            >
+          </div>
+          <input
+            type="file"
+            name="categoryImage"
+            accept="image/*"
+            class="hidden"
+            id="categoryImageInput"
+            @change="handleFileChange"
+          />
+        </label>
+
+        <!-- Image Previews -->
+        <div class="mt-3 flex flex-col gap-3">
+          <div x-show="imagePreviewUrl" id="imagePreviewContainer">
+            <p class="mb-1 text-sm text-gray-500">Selected Image:</p>
+            <img
+              id="imagePreview"
+              class="h-40 w-full rounded-lg border border-gray-300 object-cover"
+              :src="imagePreviewUrl"
+              alt="Preview"
+            />
+          </div>
+          <div
+            x-show="imagePreviewUrl"
+            id="thumbnailContainer"
+            class="flex items-center gap-3"
+          >
+            <img
+              id="thumbnail"
+              class="h-16 w-16 rounded-lg border border-gray-300 object-cover"
+              :src="imagePreviewUrl"
+              alt="Thumbnail"
+            />
+            <button
+              type="button"
+              @click="removeImage"
+              class="rounded-lg bg-gray-300 px-3 py-1 text-gray-700 hover:bg-gray-400"
+            >
+              🗑️ Delete
+            </button>
+          </div>
+        </div>
+
+        <p
+          id="imageError"
+          class="mt-2 text-sm text-red-500"
+          x-text="errors.image"
+        ></p>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-6 flex justify-end space-x-3">
+      <button
+        type="button"
+        @click="window.history.back()"
+        class="rounded-lg border border-gray-400 px-5 py-2 text-gray-700 transition hover:bg-gray-200"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="rounded-lg bg-blue-500 px-5 py-2 text-white transition hover:bg-blue-700"
+      >
+        Add Category
+      </button>
+    </div>
+
+    <input
+      type="hidden"
+      name="croppedImage"
+      id="croppedImage"
+      x-model="imagePreviewUrl"
+    />
+  </form>
+</div>
+
 <script>
-  const imageInput = document.getElementById("categoryImageInput");
-  const imagePreview = document.getElementById("imagePreview");
-  const imagePreviewContainer = document.getElementById("imagePreviewContainer");
-  const imageError = document.getElementById("imageError");
+  function categoryForm() {
+    return {
+      categoryName: '',
+      description: '',
+      imagePreviewUrl: '', // Store the image URL for preview
+      errors: {},
+      backendError: '<%= typeof error !== "undefined" ? error : "" %>',
 
-  const categoryNameInput = document.querySelector('input[name="categoryName"]');
-  const descriptionInput = document.querySelector('textarea[name="description"]');
+      init() {
+        // Show backend error if exists
+        if (this.backendError) {
+          setTimeout(() => {
+            this.backendError = null;
+          }, 5000);
+        }
+      },
 
-  const categoryNameError = document.getElementById("categoryNameError");
-  const descriptionError = document.getElementById("descriptionError");
+      handleFileChange(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.imagePreviewUrl = e.target.result; // Set the image URL for preview
+          };
+          reader.readAsDataURL(file);
+        }
+      },
 
-  // Show preview of selected image
-  imageInput.addEventListener("change", function (event) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        imagePreview.src = e.target.result;
-        imagePreviewContainer.classList.remove("hidden");
-        imageError.classList.add("hidden"); // Hide error if an image is selected
-      };
-      reader.readAsDataURL(file);
-    }
-  });
+      removeImage() {
+        this.imagePreviewUrl = ''; // Clear the image preview
+        document.getElementById('categoryImageInput').value = ''; // Clear the file input
+      },
 
-  // Validate form before submission
-  function validateForm() {
-    // Trim the input values
-    const categoryName = categoryNameInput.value.trim();
-    const description = descriptionInput.value.trim();
-    let isValid = true;
+      submitForm() {
+        this.errors = {};
 
-    // Reset error messages
-    categoryNameError.textContent = "";
-    descriptionError.textContent = "";
-    categoryNameError.classList.add("hidden");
-    descriptionError.classList.add("hidden");
-    imageError.classList.add("hidden");
+        if (!this.categoryName) {
+          this.errors.categoryName = 'Category name is required';
+        }
 
-    // Check if inputs are empty after trimming
-    if (!categoryName) {
-      categoryNameError.textContent = "⚠️ Category Name cannot be empty or spaces only.";
-      categoryNameError.classList.remove("hidden");
-      isValid = false;
-    }
-    if (!description) {
-      descriptionError.textContent = "⚠️ Description cannot be empty or spaces only.";
-      descriptionError.classList.remove("hidden");
-      isValid = false;
-    }
+        if (!this.description) {
+          this.errors.description = 'Description is required';
+        }
 
-    // Check if an image is uploaded
-    if (!imageInput.files.length) {
-      imageError.classList.remove("hidden");
-      isValid = false;
-    }
+        if (!this.imagePreviewUrl) {
+          this.errors.image = 'Image is required';
+        }
 
-    return isValid; // Allow or prevent form submission
+        if (Object.keys(this.errors).length === 0) {
+          this.$el.submit();
+        }
+      }
+    };
   }
 </script>

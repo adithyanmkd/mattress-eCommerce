@@ -6,7 +6,7 @@ const getCustomers = async (req, res) => {
     let searchValue = req.query.search || ''
 
     const page = parseInt(req.query.page) || 1
-    const limit = 1 // Number of users per page
+    const limit = 10 // Number of users per page
     const skip = (page - 1) * limit
 
     // Build the search filter
@@ -34,6 +34,7 @@ const getCustomers = async (req, res) => {
       searchValue, // Keep search value in UI
       layout: 'layouts/admin-layout.ejs',
     })
+    // res.status(200).json(users)
   } catch (error) {
     console.error('Error fetching users:', error)
     res.json({ Error: error, DeveloperNote: 'get all users route' })
@@ -42,15 +43,14 @@ const getCustomers = async (req, res) => {
 
 // block user
 const toggleBlock = async (req, res) => {
-  const userId = req.params.id
-  const user = await User.findById({ _id: userId })
-
   try {
-    user.isBlocked = !user.isBlocked // Toggle block status
+    const user = await User.findById(req.params.id)
+    user.isBlocked = !user.isBlocked
     await user.save()
-    res.redirect('/admin/customers')
+    res.redirect('back')
   } catch (error) {
-    res.json({ Error: error, DevloperNote: 'toggle block controller' })
+    console.error('Error toggling block status:', error)
+    res.status(500).send('Server Error')
   }
 }
 

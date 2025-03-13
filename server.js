@@ -5,6 +5,7 @@ import expressLayouts from 'express-ejs-layouts'
 import session from 'express-session'
 import flash from 'connect-flash'
 import MongoStore from 'connect-mongo'
+import methodOverride from 'method-override'
 
 // import configs
 import passport from './config/passport.js'
@@ -48,6 +49,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(flash()) // flash message i used to succes, and error message showing
+app.use(methodOverride('_method'))
 
 app.use(express.urlencoded({ extended: true })) // Enables parsing of form data
 app.use(express.json()) // Enables JSON parsing (for APIs)

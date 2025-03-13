@@ -47,20 +47,14 @@
           <td class="p-3">
             <span class="px-3 py-1 rounded-md bg-blue-100 text-blue-600 font-medium"><%= user.role %></span>
           </td>
-          <!-- status column -->
-          <!-- <td class="p-3">
-            <span class="px-3 py-1 rounded-md <%= user.isBlocked ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' %> font-medium">
-              <%= user.isBlocked ? 'Blocked' : 'Active' %>
-            </span>
-          </td> -->
-          <!-- status column -->
-          <td class="p-3">
-            <form id="toggle-form" action="/admin/customers/<%= user._id %>/toggle-block"  method="POST">
-              <button type="submit" class="px-4 py-2 rounded-md text-white font-medium 
-                <%= user.isBlocked ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600' %>">
+            <td class="p-3">
+              <button 
+                onclick="showModal('<%= user._id %>', '<%= user.isBlocked %>')"
+                class="px-4 py-2 rounded-md text-white font-medium 
+                  <%= user.isBlocked ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600' %>"
+              >
                 <%= user.isBlocked ? 'Unblock' : 'Block' %>
               </button>
-            </form>
           </td>
         </tr>
         <% }) %>
@@ -87,3 +81,63 @@
   </div>
   </div>
 </div>
+<!-- Add this modal at the bottom of your user listing page -->
+<div id="confirmationModal" class="hidden fixed inset-0 bg-black/70  items-center justify-center">
+  <div class="bg-white p-6 rounded-lg w-96">
+    <h3 class="text-xl font-bold mb-4" id="modalTitle">Confirm Action</h3>
+    <p id="modalMessage">Are you sure you want to perform this action?</p>
+    <div class="mt-6 flex justify-end gap-4">
+      <button onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+      <button onclick="confirmAction()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentUserId = null;
+  let isBlockAction = true;
+
+  function showModal(userId, isBlocked) {
+    currentUserId = userId;
+    isBlockAction = !isBlocked;
+    
+    const modal = document.getElementById('confirmationModal');
+    const title = document.getElementById('modalTitle');
+    const message = document.getElementById('modalMessage');
+    
+    title.textContent = isBlockAction ? 'Block User' : 'Unblock User';
+    message.textContent = `Are you sure you want to ${isBlockAction ? 'block' : 'unblock'} this user?`;
+    modal.classList.add("flex")
+    modal.classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('confirmationModal').classList.add('hidden');
+    currentUserId = null;
+  }
+
+  async function confirmAction() {
+    if (!currentUserId) return;
+
+    try {
+      const response = await fetch(`/admin/customers/${currentUserId}/toggle-block`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        window.location.reload(); // Refresh to show updated status
+      } else {
+        alert('Action failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred. Please try again.');
+    }
+    closeModal();
+  }
+</script>
+
+

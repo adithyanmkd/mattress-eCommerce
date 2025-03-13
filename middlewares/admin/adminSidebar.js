@@ -1,5 +1,3 @@
-let tempPath = ''
-
 const adminSidebar = (req, res, next) => {
   res.locals.adminSidebar = [
     {
@@ -16,11 +14,13 @@ const adminSidebar = (req, res, next) => {
         {
           name: 'All Customers',
           href: '/admin/customers',
+          linkId: 'all-customer',
           active: req.path === '/customers',
         },
         {
           name: 'Customer Details',
           href: '#',
+          linkId: 'single-customer',
           active: req.path === '/customers/details',
         },
       ],
@@ -33,16 +33,19 @@ const adminSidebar = (req, res, next) => {
         {
           name: 'Product List',
           href: '/admin/products',
+          linkId: 'all-product',
           active: req.path === '/products',
         },
         {
           name: 'Add Product',
           href: '/admin/products/add',
+          linkId: 'add-product',
           active: req.path === '/products/add',
         },
         {
           name: 'Category List',
           href: '/admin/categories',
+          linkId: 'all-category',
           active: req.path === '/categories',
         },
       ],

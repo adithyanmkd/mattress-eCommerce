@@ -5,7 +5,7 @@ import Product from '../../models/productModel.js'
 // get add product page
 const getProduct = async (req, res) => {
   const categories = await Category.find({ isDeleted: false })
-  res.render('admin/pages/products/AddProduct', {
+  res.render('admin/pages/products/NewAddProduct', {
     layout: 'layouts/admin-layout',
     categories,
   })
@@ -14,37 +14,53 @@ const getProduct = async (req, res) => {
 // add product
 const postProduct = async (req, res) => {
   try {
-    const { productName, description, price, category, quantity } = req.body // accessing form values
-    const discount = parseFloat(price.discount)
-    price.discount = isNaN(discount) ? 0 : discount
+    const {
+      productName,
+      description,
+      price,
+      category,
+      quantity,
+      sizeCategory,
+    } = req.body
+    console.log(category, '--------here')
 
-    // create new product
+    // Convert price values to numbers
+    const sellingPrice = parseFloat(price.sellingPrice) || 0
+    const originalPrice = parseFloat(price.originalPrice) || 0
+
+    // Create new product
     const newProduct = new Product({
       productName,
       images: {
-        cardImage: {
-          path: req.files['cardImage'][0].path.replace(/.*\/public\//, '/'), // Keep only relative path
-          alt: `${productName} card image`,
-        },
-        productImages: req.files['productImages'].map((file) => ({
-          path: file.path.replace(/.*\/public\//, '/'), // Keep only relative path
-          alt: `${productName} product image`,
-        })),
+        // Ensure cardImage is processed properly
+        cardImage: req.files['cardImage']
+          ? {
+              path: req.files['cardImage'][0].path.replace(/.*\/public\//, '/'),
+              alt: `${productName} card image`,
+            }
+          : null,
+        productImages: req.files['productImages']
+          ? req.files['productImages'].map((file, index) => ({
+              path: file.path.replace(/.*\/public\//, '/'),
+              alt: `${productName} product image ${index + 1}`,
+            }))
+          : [],
       },
-      description: description,
+      description,
+      sizeCategory,
       price: {
-        sellingPrice: parseFloat(price.sellingPrice),
-        originalPrice: parseFloat(price.originalPrice),
-        discount: parseFloat(price.discount),
+        sellingPrice,
+        originalPrice,
       },
       category,
       quantity,
     })
 
-    await newProduct.save() // save new product
+    await newProduct.save()
     res.redirect('/admin/products')
   } catch (error) {
-    res.json({ Error: error, DeveloperNote: 'post product controller' })
+    console.error('Error:', error)
+    res.status(500).json({ error, DeveloperNote: 'error from postProduct' })
   }
 }
 
@@ -97,11 +113,98 @@ const deleteProduct = async (req, res) => {
   }
 }
 
+// get edit page
+const getEdit = async (req, res) => {
+  const id = req.params.id
+  const categories = await Category.find({ isDeleted: false })
+  const product = await Product.findById(id)
+  console.log(categories)
+  res.render('admin/pages/products/EditPage', {
+    layout: false,
+    categories,
+    product,
+  })
+}
+
+// Update product
+const updateProduct = async (req, res) => {
+  const productId = req.params.id
+  const updates = req.body
+  const files = req.files
+
+  try {
+    // Convert price values to numbers
+    const sellingPrice = parseFloat(updates.price.sellingPrice) || 0
+    const originalPrice = parseFloat(updates.price.originalPrice) || 0
+
+    // Prepare update object
+    const updateData = {
+      productName: updates.productName,
+      description: updates.description,
+      price: {
+        sellingPrice,
+        originalPrice,
+      },
+      category: updates.category,
+      quantity: updates.quantity,
+      sizeCategory: updates.sizeCategory,
+    }
+
+    // Handle card image update
+    if (files?.cardImage) {
+      updateData.images = {
+        cardImage: {
+          path: files.cardImage[0].path.replace(/.*\/public\//, '/'),
+          alt: `${updates.productName} card image`,
+        },
+        productImages: updates.images?.productImages || [],
+      }
+    }
+
+    // Handle product images update
+    if (files?.productImages) {
+      const newProductImages = files.productImages.map((file, index) => ({
+        path: file.path.replace(/.*\/public\//, '/'),
+        alt: `${updates.productName} product image ${index + 1}`,
+      }))
+
+      updateData.images = {
+        ...updateData.images,
+        productImages: [
+          ...(updateData.images?.productImages || []),
+          ...newProductImages,
+        ],
+      }
+    }
+
+    // Update the product
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      updateData,
+      { new: true },
+    )
+
+    if (!updatedProduct) {
+      return res.status(404).json({ error: 'Product not found' })
+    }
+
+    res.redirect('/admin/products')
+  } catch (error) {
+    console.error('Update error:', error)
+    res.status(500).json({
+      error: 'Failed to update product',
+      DeveloperNote: 'Error from updateProduct controller',
+    })
+  }
+}
+
 const productController = {
   getProduct,
   postProduct,
   allProduct,
   deleteProduct,
+  getEdit,
+  updateProduct,
 }
 
 // export product controller

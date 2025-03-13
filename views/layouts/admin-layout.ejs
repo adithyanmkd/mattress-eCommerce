@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="/style/output.css">
+    <!-- flowbite cdn started -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <!-- flowbite cdn ended -->
+     <!-- alpine script started -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- alpine script ended -->
+     <!-- Cropper.js CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css"
+    />
+    <!-- Cropper.js JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <!-- Include Toastify.js for Popups -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   </head>
   <body class="flex h-screen bg-gray-50">
     <!-- Sidebar started -->
@@ -27,12 +47,15 @@
       </header>
 
       <!-- Page Content -->
-       <main class="flex flex-col  h-full  overflow-auto py-4">
-         <%- body %>
+       <main class="flex w-full h-full flex-col  overflow-auto py-4">
+         <div id="content-area" class="p-4 w-full h-full">
+           <%- body %>
+         </div>
         </main>
     </div>
 
+
     <!-- <script src="/javascript/adminLayout.js"></script> -->
-    <script src="/javascript/ajax/admin/auth.js"></script>
+    <script type="module" src="/javascript/ajax/admin/main.js"></script>
   </body>
 </html>

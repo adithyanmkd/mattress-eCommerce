@@ -1,77 +1,170 @@
-<h2 class="mb-4 text-2xl font-semibold">Edit Category</h2>
+<div class="mx-auto mt-2 max-w-6xl rounded-lg bg-white p-6 shadow-md">
+  <h2 class="mb-4 text-2xl font-semibold">Edit Category</h2>
 
-<div class="rounded-lg bg-white p-6 shadow-md">
   <form
     action="/admin/categories/edit/<%= category._id %>"
     method="POST"
     enctype="multipart/form-data"
+    x-data="{
+      categoryName: '<%= category.name %>',
+      description: '<%= category.description %>',
+      image: '<%= category.image ? category.image.path : null %>',
+      errors: {},
+
+      addImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.image = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      },
+
+      clearImage() {
+        this.image = null;
+      },
+
+      validateForm() {
+        this.errors = {}; // Reset errors
+
+        if (!this.categoryName) {
+          this.errors.categoryName = 'Category name is required.';
+        }
+
+        if (!this.description) {
+          this.errors.description = 'Description is required.';
+        }
+
+        if (!this.image) {
+          this.errors.image = 'Category image is required.';
+        }
+
+        return Object.keys(this.errors).length === 0;
+      },
+
+      submitForm() {
+        if (this.validateForm()) {
+          this.$el.submit();
+        } else {
+          console.log('Form validation failed:', this.errors);
+        }
+      }
+    }"
+    @submit.prevent="submitForm"
   >
-    <div class="mb-4">
-      <label class="block font-medium text-gray-700">Category Name</label>
-      <input
-        type="text"
-        name="name"
-        value="<%= category.name %>"
-        class="mt-1 w-full rounded-lg border px-3 py-2"
-        required
-      />
-    </div>
+    <!-- Add this hidden input for method override if your backend expects PATCH -->
+    <input type="hidden" name="_method" value="PATCH" />
 
-    <div class="mb-4">
-      <label class="block font-medium text-gray-700">Description</label>
-      <textarea
-        name="description"
-        class="mt-1 w-full rounded-lg border px-3 py-2"
-        required
-      >
-<%= category.description %></textarea
-      >
-    </div>
+    <div class="flex h-auto w-full">
+      <!-- Left Section -->
+      <div class="pl-20">
+        <h2 class="pb-8 text-[26px] font-semibold">Category Information</h2>
+        <ul
+          class="max-w-[340px] space-y-2 rounded-t-4xl border border-[#D8DEE6]"
+        >
+          <!-- ================== Category Image Upload ================= -->
+          <li class="mb-4">
+            <input
+              type="file"
+              name="image"
+              class="hidden"
+              id="categoryImageUpload"
+              @change="addImage"
+            />
+            <label for="categoryImageUpload">
+              <template x-if="image">
+                <div class="relative h-[180px] w-[340px] cursor-pointer">
+                  <img
+                    :src="image"
+                    alt="Category Image Preview"
+                    class="h-full w-full rounded-t-4xl border border-[#D8DEE6] object-cover"
+                  />
+                  <button
+                    @click.prevent="clearImage"
+                    class="absolute top-2 right-2 rounded-full bg-red-500 px-2 py-1 text-xs text-white"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </template>
 
-    <div class="mb-4">
-      <label class="block font-medium text-gray-700">Category Image</label>
-      <div class="flex items-center gap-4">
-        <img
-          id="previewImage"
-          src="<%= category.image ? category.image.path : '/images/default-category.jpg' %>"
-          alt="Category Image"
-          class="h-24 w-24 rounded-lg object-cover"
-        />
-        <input
-          type="file"
-          name="image"
-          class="rounded-lg border p-2"
-          onchange="previewFile()"
-        />
+              <template x-if="!image">
+                <div
+                  class="flex h-[180px] w-[340px] cursor-pointer flex-col items-center justify-center space-y-3 rounded-t-4xl bg-[#D8DEE6]"
+                >
+                  <img
+                    src="/images/icons/img-placeholder.svg"
+                    alt="img placeholder"
+                  />
+                  <p class="text-sm font-medium text-[#81909F]">
+                    Add a category image
+                  </p>
+                </div>
+              </template>
+            </label>
+            <template x-if="errors.image">
+              <p class="text-sm text-red-500" x-text="errors.image"></p>
+            </template>
+          </li>
+
+          <!-- ================== Category Name ================= -->
+          <li class="flex min-h-[60px] w-full justify-between px-2">
+            <div class="flex flex-col gap-1.5 pt-4">
+              <label for="categoryName" class="text-sm font-bold"
+                >Category Name</label
+              >
+              <input
+                class="border-b-[1px] border-[#D8DEE6] text-[16px] placeholder:text-[14px] placeholder:font-light placeholder:text-[#707070] focus:border-blue-500 focus:outline-none"
+                type="text"
+                id="categoryName"
+                name="name"
+                placeholder="Enter category name"
+                x-model="categoryName"
+              />
+              <template x-if="errors.categoryName ">
+                <p
+                  class="text-sm text-red-500"
+                  x-text="errors.categoryName"
+                ></p>
+              </template>
+            </div>
+          </li>
+
+          <!-- ================== Description ================= -->
+          <li class="min-h-[60px] w-full justify-between px-2">
+            <div class="flex flex-col gap-3 pt-4">
+              <label for="description" class="text-sm font-bold"
+                >Description</label
+              >
+              <textarea
+                class="h-30 rounded-lg border border-gray-300 p-2 outline-gray-600 placeholder:text-sm placeholder:font-light"
+                name="description"
+                id="description"
+                placeholder="Describe the category in more detail..."
+                x-model="description"
+              ></textarea>
+              <template x-if="errors.description">
+                <p class="text-sm text-red-500" x-text="errors.description"></p>
+              </template>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
 
-    <div class="mt-4 flex justify-end gap-3">
-      <a href="/admin/categories" class="rounded-lg bg-gray-300 px-4 py-2"
+    <!-- Submit Button -->
+    <div class="flex w-full items-center justify-between pt-8 pr-20 pl-20">
+      <a class="underline underline-offset-4" href="/admin/categories"
         >Cancel</a
       >
       <button
         type="submit"
-        class="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+        class="flex cursor-pointer gap-2 rounded-[30px] bg-black py-2 pr-3 pl-6 text-white"
       >
-        Update Category
+        Save <img src="/images/icons/arrow.svg" alt="arrow icon" />
       </button>
     </div>
   </form>
 </div>
-
-<script>
-  function previewFile() {
-      const file = document.querySelector('input[type=file]').files[0];
-      const preview = document.getElementById('previewImage');
-      const reader = new FileReader();
-
-      reader.onloadend = function () {
-          preview.src = reader.result;
-      };
-
-      if (file) {
-          reader.readAsDataURL(file);
-      }
-  }
-</script>

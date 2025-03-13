@@ -12,28 +12,91 @@ const getAddCategory = (req, res) => {
 
 // saving category into database
 const postAddCategory = async (req, res) => {
-  const { categoryName, description } = req.body
-  const imgPath = req.files.categoryImage[0].path.replace(/.*\/public\//, '/')
-  const category = await Category.find({ name: categoryName })
+  const { categoryName, description, croppedImage } = req.body
 
-  if (category.length > 0) {
-    return res.json({ Error: 'category already exits' })
+  // Validate required fields
+  if (!categoryName || !description) {
+    return res.status(400).render('admin/pages/categories/AddCategory', {
+      layout: 'layouts/admin-layout.ejs',
+      error: 'Category name and description are required',
+    })
   }
 
   try {
+    // Check if category already exists (case-insensitive)
+    const existingCategory = await Category.findOne({
+      name: { $regex: new RegExp(`^${categoryName}$`, 'i') },
+    })
+
+    if (existingCategory) {
+      return res.status(409).render('admin/pages/categories/AddCategory', {
+        layout: 'layouts/admin-layout.ejs',
+        error: 'Category already exists',
+        formData: { categoryName, description }, // Preserve form data
+      })
+    }
+
+    // Handle image upload
+    let imageData = {}
+    if (req.files?.categoryImage) {
+      const imgPath = req.files.categoryImage[0].path.replace(
+        /.*\/public\//,
+        '/',
+      )
+      imageData = {
+        path: imgPath,
+        alt: `${categoryName} image`,
+      }
+    } else if (croppedImage) {
+      // Handle base64 cropped image
+      const base64Data = croppedImage.replace(/^data:image\/\w+;base64,/, '')
+      const buffer = Buffer.from(base64Data, 'base64')
+      const fileName = `category-${Date.now()}.png`
+      const filePath = path.join(__dirname, '../public/uploads', fileName)
+
+      await fs.promises.writeFile(filePath, buffer)
+      imageData = {
+        path: `/uploads/${fileName}`,
+        alt: `${categoryName} image`,
+      }
+    } else {
+      return res.status(400).render('admin/pages/categories/AddCategory', {
+        layout: 'layouts/admin-layout.ejs',
+        error: 'Category image is required',
+        formData: { categoryName, description },
+      })
+    }
+
+    // Create new category
     const newCategory = new Category({
       name: categoryName,
       description,
-      image: {
-        path: imgPath,
-        alt: `${categoryName} image`,
-      },
+      image: imageData,
     })
 
-    await newCategory.save() // saving new category
+    await newCategory.save()
+
+    // Redirect with success message
+    req.flash('success', 'Category added successfully')
     res.redirect('/admin/categories')
   } catch (error) {
-    res.json({ Error: error, DeveloperNote: 'error from post add category' })
+    console.error('Error in postAddCategory:', error)
+
+    // Handle specific errors
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map((err) => err.message)
+      return res.status(400).render('admin/pages/categories/AddCategory', {
+        layout: 'layouts/admin-layout.ejs',
+        error: errors.join(', '),
+        formData: { categoryName, description },
+      })
+    }
+
+    res.status(500).render('admin/pages/categories/AddCategory', {
+      layout: 'layouts/admin-layout.ejs',
+      error: 'An unexpected error occurred. Please try again.',
+      formData: { categoryName, description },
+    })
   }
 }
 
@@ -42,10 +105,10 @@ const getCategoryList = async (req, res) => {
   let searchValue = req.query.search || '' // accessing search value from url
 
   const page = parseInt(req.query.page) || 1
-  const limit = 1 // Number of products per page
+  const limit = 10 // Number of products per page
   const skip = (page - 1) * limit
 
-  // Build the search filter
+  // Build  search filter
   let filter = {}
   if (searchValue) {
     filter = {
@@ -108,19 +171,11 @@ const editCategory = async (req, res) => {
     })
   } catch (error) {
     console.error(error)
-    res.status(500).render('admin/pages/categories/EditCategory', {
-      layout: 'layouts/admin-layout',
-      title: 'Edit Category',
-      errorMessage: 'An error occurred while fetching the category',
-    })
   }
 }
 
 // post edit category
 const postEditCategory = async (req, res) => {
-  console.log('Request Body:', req.body)
-  console.log('Uploaded File:', req.file)
-
   try {
     const categoryId = req.params.id
     const category = await Category.findById(categoryId)
@@ -131,7 +186,6 @@ const postEditCategory = async (req, res) => {
 
     const { name, description } = req.body
     let imagePath = category.image.path.replace(/.*\/public\//, '/')
-    console.log(imagePath, 'here------')
 
     if (req.file) {
       // If an old image exists, delete it
@@ -143,7 +197,7 @@ const postEditCategory = async (req, res) => {
       }
 
       // Save only relative path
-      imagePath = req.file.path.replace(/^public\//, '/')
+      imagePath = '/' + path.relative('public', req.file.path)
     }
 
     // Update category

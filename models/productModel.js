@@ -20,7 +20,6 @@ const productSchema = new mongoose.Schema(
     price: {
       sellingPrice: { type: Number, required: true },
       originalPrice: { type: Number, required: true },
-      discount: { type: Number },
     },
     quantity: { type: Number, required: true },
     wishlistStatus: { type: Boolean, default: false },
@@ -30,6 +29,7 @@ const productSchema = new mongoose.Schema(
       ref: 'Category',
       required: true,
     }, // Reference to Category model
+    sizeCategory: { type: String, required: true },
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }, // adds createdAt & updatedAt

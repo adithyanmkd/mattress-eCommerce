@@ -5,6 +5,7 @@
     action="/admin/products/add"
     method="POST"
     enctype="multipart/form-data"
+    x-data="{ selectedCategory: '' }" 
   >
     <div class="grid grid-cols-3 gap-6">
       <!-- Left Section (Product Info & Image) -->
@@ -111,13 +112,18 @@
         <!-- Category Selection -->
         <div class="rounded-lg bg-gray-50 p-4 shadow">
           <h3 class="mb-3 text-lg font-medium">Category</h3>
-          <select name="category" class="w-full rounded border p-2">
+          <select
+            name="category"
+            class="w-full rounded border p-2"
+            x-model="selectedCategory" 
+          >
             <option selected disabled>Select category</option>
             <% categories.forEach((category) => { %>
-              <option><%- category.name %></option>
+              <option value="<%= category.name %>"><%- category.name %></option>
             <% }) %>
           </select>
         </div>
+
 
         <!-- Quantity Field -->
         <div class="rounded-lg bg-gray-50 p-4 shadow">

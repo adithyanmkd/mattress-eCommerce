@@ -28,7 +28,7 @@ const products = async (req, res) => {
     let totalPages = Math.ceil(totalProducts / limit)
 
     // Fetch Filtered & Sorted Products
-    let products = await Product.find(query)
+    let products = await Product.find({ ...query, isDeleted: false })
       .sort(sortQuery)
       .skip(skip)
       .limit(limit)

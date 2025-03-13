@@ -64,8 +64,8 @@
         this.errors.category = 'Category is required.';
       }
 
-      // Validate size category
-      if (!this.selectedSize) {
+      // Validate size category (only if category is 'mattress')
+      if (this.category === 'mattress' && !this.selectedSize) {
         this.errors.selectedSize = 'Size category is required.';
       }
 
@@ -217,7 +217,7 @@
             >
               <option value="" disabled selected>Select category</option>
               <% categories.forEach((category) => { %>
-                <option value="<%- category.name %>">
+                <option  value="<%= category.name %>">
                   <%- category.name %>
                 </option>
               <% }) %>
@@ -228,38 +228,40 @@
           </div>
         </li>
 
-        <!-- ================== Size Category ================= -->
-        <li class="px-2">
-          <div class="flex flex-col gap-1.5 pt-4">
-            <label>Size category</label>
-            <ul class="flex flex-wrap gap-3">
-              <template x-for="size in ['single', 'double', 'queen', 'king']" :key="size">
-                <li>
-                  <input
-                    type="radio"
-                    x-model="selectedSize"
-                    :value="size"
-                    :id="size"
-                    name="sizeCategory"
-                    class="hidden"
-                  />
-                  <label
-                    :for="size"
-                    :class="selectedSize === size 
-                      ? 'bg-[#4470E2] text-white' 
-                      : 'border border-[#6C6C6C] text-[#303030] hover:bg-[#E6EDFF]'"
-                    class="cursor-pointer rounded-2xl px-5 py-1 font-light"
-                  >
-                    <span x-text="size.charAt(0).toUpperCase() + size.slice(1)"></span>
-                  </label>
-                </li>
+        <!-- ================== Size Category (Conditional) ================= -->
+        <template x-if="category === 'mattress'">
+          <li class="px-2">
+            <div class="flex flex-col gap-1.5 pt-4">
+              <label>Size category</label>
+              <ul class="flex flex-wrap gap-3">
+                <template x-for="size in ['single', 'double', 'queen', 'king']" :key="size">
+                  <li>
+                    <input
+                      type="radio"
+                      x-model="selectedSize"
+                      :value="size"
+                      :id="size"
+                      name="sizeCategory"
+                      class="hidden"
+                    />
+                    <label
+                      :for="size"
+                      :class="selectedSize === size 
+                        ? 'bg-[#4470E2] text-white' 
+                        : 'border border-[#6C6C6C] text-[#303030] hover:bg-[#E6EDFF]'"
+                      class="cursor-pointer rounded-2xl px-5 py-1 font-light"
+                    >
+                      <span x-text="size.charAt(0).toUpperCase() + size.slice(1)"></span>
+                    </label>
+                  </li>
+                </template>
+              </ul>
+              <template x-if="errors.selectedSize">
+                <p class="text-sm text-red-500" x-text="errors.selectedSize"></p>
               </template>
-            </ul>
-            <template x-if="errors.selectedSize">
-              <p class="text-sm text-red-500" x-text="errors.selectedSize"></p>
-            </template>
-          </div>
-        </li>
+            </div>
+          </li>
+        </template>
 
         <!-- ================== Price ================= -->
         <li class="flex min-h-[60px] w-full justify-between px-2">

@@ -67,9 +67,9 @@
         }
 
         // Validate size category
-        if (!this.selectedSize) {
-          this.errors.selectedSize = 'Size category is required.';
-        }
+       // if (!this.selectedSize) {
+         // this.errors.selectedSize = 'Size category is required.';
+        //} 
 
         // Validate selling price
         if (!this.sellingPrice || this.sellingPrice < 0) {
@@ -221,7 +221,7 @@
               >
                 <option value="" disabled selected>Select category</option>
                 <% categories.forEach((category) => { %>
-                  <option value="<%- category._id %>">
+                  <option value="<%= category.name %>">
                     <%- category.name %>
                   </option>
                 <% }) %>
@@ -233,7 +233,7 @@
           </li>
 
           <!-- ================== Size Category ================= -->
-          <li class="px-2">
+          <!-- <li class="px-2">
             <div class="flex flex-col gap-1.5 pt-4">
               <label>Size category</label>
               <ul class="flex flex-wrap gap-3">
@@ -263,7 +263,7 @@
                 <p class="text-sm text-red-500" x-text="errors.selectedSize"></p>
               </template>
             </div>
-          </li>
+          </li> -->
 
           <!-- ================== Price ================= -->
           <li class="flex min-h-[60px] w-full justify-between px-2">

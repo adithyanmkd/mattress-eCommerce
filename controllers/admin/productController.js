@@ -22,7 +22,6 @@ const postProduct = async (req, res) => {
       quantity,
       sizeCategory,
     } = req.body
-    console.log(category, '--------here')
 
     // Convert price values to numbers
     const sellingPrice = parseFloat(price.sellingPrice) || 0
@@ -69,7 +68,7 @@ const allProduct = async (req, res) => {
   let searchValue = req.query.search || '' // accessing search value from url
 
   const page = parseInt(req.query.page) || 1
-  const limit = 1 // Number of users per page
+  const limit = 10 // Number of users per page
   const skip = (page - 1) * limit
 
   // Build the search filter

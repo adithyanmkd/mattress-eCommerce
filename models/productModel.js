@@ -29,7 +29,7 @@ const productSchema = new mongoose.Schema(
       ref: 'Category',
       required: true,
     }, // Reference to Category model
-    sizeCategory: { type: String, required: true },
+    sizeCategory: { type: String },
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }, // adds createdAt & updatedAt

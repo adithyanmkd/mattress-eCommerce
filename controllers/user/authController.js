@@ -73,7 +73,7 @@ const postLogin = async (req, res) => {
       // })
       return res.status(401).json({ error: 'Invalid password.' })
     }
-
+    req.session.user = user
     res.json({ success: true, message: 'Login successful' })
   } catch (error) {
     res.json({ Error: error, DeveloperError: 'post login error' })
@@ -93,7 +93,6 @@ const getRegister = (req, res) => {
 // register new user
 const postRegister = async (req, res) => {
   const { fullname, email, password } = req.body // accessing values from form
-  console.log(req.body)
 
   // hashed password
   const hashedPassword = await bcrypt.hash(password, 10)

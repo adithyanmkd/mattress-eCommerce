@@ -12,6 +12,8 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String, // optional for google user
     },
+    number: { type: Number },
+    gender: { type: String },
     role: {
       type: String,
       enum: ['customer', 'admin'], // allowed roles

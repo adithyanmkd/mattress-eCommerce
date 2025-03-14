@@ -1,0 +1,134 @@
+div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">MY ADDRESSES</h1>
+
+        <!-- Address Cards Container -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Add New Address Card -->
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors">
+                <div class="text-center">
+                    <span class="text-4xl text-gray-400 block mb-2">+</span>
+                    <span class="text-gray-600">Add new address</span>
+                </div>
+            </div>
+
+            <!-- Address Card 1 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="bg-black text-white p-4 flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <span>Adithyan c</span>
+                        <span class="text-sm">(Default)</span>
+                        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <p class="text-gray-600 mb-4">8848911254, Kinfra,<br>KOZHIKODE, KERALA, 673620</p>
+                    <div class="flex gap-3">
+                        <button onclick="showModal()" class="px-6 py-2 bg-yellow-400 hover:bg-yellow-500 rounded font-medium transition-colors">Edit</button>
+                        <button class="px-6 py-2 border border-gray-300 rounded font-medium hover:bg-gray-50 transition-colors">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address Card 2 -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="bg-black text-white p-4">
+                    <span>Adithyan</span>
+                </div>
+                <div class="p-4">
+                    <p class="text-gray-600 mb-4">8848911254, Cholapadath (Ho),<br>Payyanedam (Po),Mylampadam Road,<br>Poolachira (Mkd),<br>PALAKKAD, KERALA, 678583</p>
+                    <div class="flex gap-3">
+                        <button onclick="showModal()" class="px-6 py-2 bg-yellow-400 hover:bg-yellow-500 rounded font-medium transition-colors">Edit</button>
+                        <button class="px-6 py-2 border border-gray-300 rounded font-medium hover:bg-gray-50 transition-colors">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Address Modal -->
+    <div id="editModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg w-full max-w-lg mx-4">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h2 class="text-xl font-semibold">Edit Address</h2>
+                <button type="button" class="text-gray-500 hover:text-gray-700" onclick="closeModal()">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <form class="space-y-4" onsubmit="event.preventDefault();">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Full Name<span class="text-red-500">*</span></label>
+                        <input type="text" value="Adithyan c" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring focus:ring-yellow-200">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email<span class="text-red-500">*</span></label>
+                        <input type="email" value="adithyankalladi@gmail.com" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring focus:ring-yellow-200">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Mobile No.<span class="text-red-500">*</span></label>
+                        <input type="tel" value="8848911254" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring focus:ring-yellow-200">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Address (House No, Building, Street Area)<span class="text-red-500">*</span></label>
+                        <input type="text" value="Kinfra" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring focus:ring-yellow-200">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Locality/Town</label>
+                            <input type="text" value="Kakkanchery" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring focus:ring-yellow-200">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Pincode<span class="text-red-500">*</span></label>
+                            <input type="text" value="673620" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring focus:ring-yellow-200">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">City/District<span class="text-red-500">*</span></label>
+                            <input type="text" value="KOZHIKODE" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring focus:ring-yellow-200">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">State<span class="text-red-500">*</span></label>
+                            <input type="text" value="KERALA" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring focus:ring-yellow-200">
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" checked class="rounded text-yellow-500 focus:ring-yellow-200">
+                        <label class="ml-2 text-sm text-gray-700">Make this default address</label>
+                    </div>
+                    <button type="submit" class="w-full bg-yellow-400 text-black py-2 rounded-md hover:bg-yellow-500 transition-colors font-medium">
+                        Save Address
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('editModal');
+
+        // Show modal
+        function showModal() {
+            modal.classList.add('show');
+            // Add click event listener to close modal when clicking outside
+            modal.addEventListener('click', closeModalOnOutsideClick);
+        }
+        
+        // Close modal
+        function closeModal() {
+            modal.classList.remove('show');
+            // Remove the event listener when modal is closed
+            modal.removeEventListener('click', closeModalOnOutsideClick);
+        }
+
+        // Close modal when clicking outside
+        function closeModalOnOutsideClick(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>

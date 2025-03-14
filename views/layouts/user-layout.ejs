@@ -12,11 +12,17 @@
       rel="stylesheet"
     />
     <!-- poppins font ended -->
+    <!-- alpine script started -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <!-- alpine script ended -->
   </head>
 
-  <body class="font-[Poppins]">
+  <body class="h-screen font-[Poppins]">
     <%- include('../user/partials/organisms/Navbar') %>
-    <main><%- body %></main>
+    <main id="content" class="pt-28"><%- body %></main>
     <%- include('../user/partials/organisms/Footer') %>
   </body>
 </html>
